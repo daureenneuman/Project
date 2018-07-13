@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+{%if add_chore=='True' %}
+<form id= "add_chore_form" action="/process_add_chore" method="POST">
+ Enter the new chore description <input type="text" name="description" required>
+<input type="submit">
+</form>
+{% else %}
+
+<a href="/chores?add_chore=True"> Add a new chore </a>
+{% endif %}
+
+ <br>
+ 
+<h1>List of chores</h1>
+{% for chore in chores %}
+<li> {{ chore.description }} </a> </li>
+{% endfor %}
+
+
+
+
+{% endblock %}
+
+

@@ -1,0 +1,38 @@
+
+<!doctype html>
+<html>
+<head>
+  <title>Chores</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  {%if 'admin' in session %}
+You are an administratore
+{% endif %}
+<div  class="nice">
+  <h3 id="chores">Family Chores</h3>
+  </div
+{% if "user_name" in session %}
+Hi {{session["user_name"]}}
+{% endif %}
+
+  <br>
+  {% if 'user_name' in session %}
+  <div id="logout"><a href= "/logout"> Logout</a></div>
+  {% endif %}
+<br>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+    
+  {% endif %}
+{% endwith %}
+
+  {% block content %} put your content here {% endblock %}
+
+</body>
+</html>

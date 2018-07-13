@@ -1,0 +1,36 @@
+body {
+background-color: lightblue;
+font-size: 20px
+}
+
+#chores {
+text-align: center;
+    color: navy;
+    font-size: 45px;
+
+}
+.nice {
+background: lightgrey;
+height: 40;
+
+
+}
+input[type=submit] {
+    background-color: white;
+    border-style: outset ;
+    color: navy;
+    padding: 16px 32px;
+    text-decoration: none;  
+    margin: 4px 2px;
+    cursor: pointer;
+}
+input[type=text] {
+    background-color: lightyellow;
+    border: solid;
+    color: navy;
+    font-size: 18px;
+    padding: 10px 25px;
+    text-decoration: none;
+    margin: 8px 4px;
+    cursor: pointer;
+}
