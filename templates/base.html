@@ -5,34 +5,23 @@
   <title>Chores</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
-
-<body>
-  {%if 'admin' in session %}
-You are an administratore
-{% endif %}
-<div  class="nice">
-  <h3 id="chores">Family Chores</h3>
-  </div
-{% if "user_name" in session %}
-Hi {{session["user_name"]}}
-{% endif %}
-
-  <br>
-  {% if 'user_name' in session %}
-  <div id="logout"><a href= "/logout"> Logout</a></div>
+<body class = "w3-margin-left" >
+  {%if "user.id" in session: %}
+  <span id="logout"><a href= "/logout"> Logout</a></span>
   {% endif %}
-<br>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
+  <h4 id="chores">Your Daily Chores   </h4>
   
-    {% for message in messages %}
+ {%if 'admin' in session %}
+  Hi {{session["user_name"]}} You are an administratore!
+{% endif %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+   {% for message in messages %}
     {{ message }}
-    {% endfor %}
-    
-  {% endif %}
+{% endfor %}
+{% endif %}
 {% endwith %}
-
-  {% block content %} put your content here {% endblock %}
+{% block content %} put your content here {% endblock %}
 
 </body>
 </html>

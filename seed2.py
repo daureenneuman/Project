@@ -13,7 +13,7 @@ def populate_chore_volentary():
         day = date.today() - timedelta(i)
 
         # quering all the volentary chores
-        chores = Chore.query.filter(Chore.is_mandatory==False, ).order_by(Chore.min_age).all()
+        chores = Chore.query.filter(Chore.is_mandatory==False).order_by(Chore.min_age).all()
         for chore in chores:
             # quering all kids that are age appropriate for the chore
             users = User.query.filter(User.age>= chore.min_age, 
@@ -24,7 +24,7 @@ def populate_chore_volentary():
                 # chore is daily
                 if chore.chore_often == 'daily':
                     for user in users:
-                        user_pick = choice([True, False, False, False])
+                        user_pick = choice([True, True, False, False])
                         # is user for this date chose this chore add record and go to the next user in the same day
                         if user_pick:
                             db.session.add(UserChore(user=user, 
@@ -102,7 +102,7 @@ def populate_chores_mandatory():
         day = date.today() - timedelta(i)
 
         # quering all the Mandatory chores
-        chores = Chore.query.filter(Chore.is_mandatory==True, ).order_by(Chore.min_age).all()
+        chores = Chore.query.filter(Chore.is_mandatory==True).order_by(Chore.min_age).all()
         for chore in chores:
             # quering all kids that are age appropriate for the chore
             users = User.query.filter(User.age>= chore.min_age, 
@@ -189,6 +189,25 @@ def populate_chores_mandatory():
         db.session.commit() 
 
 
+def populate_user_reward_log():
+    userchores = UserChore.query.filter(UserChore.status == 
+                            'done', UserChore.chore.has(is_mandatory = False)).all()
+    for userchore in userchores:
+        db.session.add(UserReward(user=userchore.user, 
+                                    reward = userchore.chore.reward, date= userchore.date))
+    db.session.commit()
+
+
+
+
+# I need to use this precedure for my engine
+def populate_user_balance():
+    userrewards = db.session.query(UserReward.user_id, func.sum(UserReward.reward)).group_by(UserReward.user_id).all()
+    for userreward in userrewards:
+        user_id = userreward[0]
+        balance = userreward[1]
+        db.session.add(UserBalance(user_id=user_id, balance= balance, Last_update=date.today()))
+    db.session.commit()
 
 
 if __name__ == "__main__":
@@ -203,3 +222,5 @@ if __name__ == "__main__":
     db.create_all()
     populate_chore_volentary()
     populate_chores_mandatory()
+    populate_user_reward_log()
+    populate_user_balance()

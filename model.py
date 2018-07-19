@@ -24,13 +24,13 @@ class Chore(db.Model):
     abr = db.Column(db.String(15), nullable=False)
     is_mandatory = db.Column(db.Boolean, nullable=False)
     min_age = db.Column(db.Integer, nullable=True)
-    chore_often = db.Column(Enum('daily', 'homework', 'weekly', 'by_weekly', 'voluntary as needed', name='chore_often'), default='voluntary as needed')
+    chore_often = db.Column(Enum('daily', 'homework', 'weekly', 'by_weekly', name='chore_often'), default='voluntary as needed')
     reward = db.Column(db.Integer, nullable=True)
     is_simultaneously = db.Column(db.Boolean, default =False)
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"< Description: {self.description}, {self.chore_often}, {self.min_age}, {self.is_mandatory}>"
+        return f"< Description: {self.description}, {self.chore_often}, {self.min_age}, {self.is_mandatory}, {self.is_simultaneously}>"
 
 
 class User(db.Model):

@@ -7,8 +7,6 @@ from model import (connect_to_db, db, Chore, Comment,
 from random import choice
 
 
-
-
 # creating chore table id, description, chore_type, min_age, chore_day_type, 
 def populate_chores_table():
     
@@ -70,7 +68,7 @@ def populate_users_table():
     db.session.commit()
 
 
-                
+           ###########################################     
 if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
     # you in a state of being able to work with the database directly.

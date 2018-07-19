@@ -2,26 +2,45 @@
 {% block content %}
 
 
-{%if add_chore=='True' %}
-<form id= "add_chore_form" action="/process_add_chore" method="POST">
- Enter the new chore description <input type="text" name="description" required>
-<input type="submit">
-</form>
-{% else %}
-
-<a href="/chores?add_chore=True"> Add a new chore </a>
-{% endif %}
-
- <br>
- 
-<h1>List of chores</h1>
-{% for chore in chores %}
-<li> {{ chore.description }} </a> </li>
+<h2>Hi {{ user.user_name}} these are your chores for today</h2>
+<h3>Mandatory chores</h3>
+<form id= "status" action='/process-chores' method="POST">
+{% for userchore_man in userchores_mans %}
+<li id="man"> 
+    {{ userchore_man.chore.description }} 
+<input  type="hidden" name= "chore_id" value= "{{userchore_man.chore_id}}">
+<select  name="status-{{userchore_man.chore_id}}">
+    <option value={{userchore_man.status}}</option>
+    <option value="done">done</option>
+</select>
+</li>
 {% endfor %}
+<h3>Chores for Reward</h3>
+{% for userchore_vol in userchores_vols %}
+<li id="vol"> 
+    {{ userchore_vol.chore.description }} 
+<input  type="hidden" name= "chore_id" value= "{{userchore_vol.chore_id}}">
+<select  name="status-{{userchore_vol.chore_id}}">
+    <option value={{userchore_vol.status}}</option>
+    <option value="done">done</option>
+       
+</select>
+</li>
+{% endfor %}
+<br>
+<input id="save" type="submit" value="Save" </input>
+</form>
 
 
 
 
+{% if "balance" in session %}
+<h1>Your balnace is: {{ session["balance"] }} dollars!</h1>
+<a href='/clear-balance'> Hide my balance</a>
+ {% else %}
+ <a href='/show-balance'> Show me my balnace</a>
+ {% endif %}
 {% endblock %}
+
 
 

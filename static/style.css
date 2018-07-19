@@ -1,12 +1,35 @@
+
+
 body {
 background-color: lightblue;
-font-size: 20px
+font-size: 20px;
+font-family: "Comic Sans MS", cursive, sans-serif;
+margin-left: 3px;
 }
+#logout {
+    text-align: right;
+    font-size: 18px;
+    margin-bottom: 0
+}
+
+
+#vol{
+    color: red;
+}
+
+#man{
+    color: red;
+}
+
 
 #chores {
 text-align: center;
     color: navy;
-    font-size: 45px;
+    font-size: 35px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+   
 
 }
 .nice {
@@ -34,3 +57,19 @@ input[type=text] {
     margin: 8px 4px;
     cursor: pointer;
 }
+#save {
+
+    background-color: lightyellow;
+    border: solid;
+    color: navy;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    vertical-align: middle
+
+}
+
