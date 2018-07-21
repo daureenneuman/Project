@@ -2,14 +2,13 @@ from datetime import date, timedelta
 from sqlalchemy import func
 
 from model import (connect_to_db, db, Chore, Comment, 
-                  User, UserChore, UserReward, 
-                  UserBalance )
+                  User, UserChore, UserReward)
 from random import choice, shuffle
 
 
 def populate_chore_volentary():
        # going over all days in the last 30 days
-    for i in range(1, 9):
+    for i in range(1, 20):
         day = date.today() - timedelta(i)
 
         # quering all the volentary chores
@@ -98,7 +97,7 @@ def populate_chore_volentary():
 
 def populate_chores_mandatory():
        # going over all days in the last 30 days
-    for i in range(1, 9):
+    for i in range(1, 20):
         day = date.today() - timedelta(i)
 
         # quering all the Mandatory chores
@@ -201,13 +200,6 @@ def populate_user_reward_log():
 
 
 # I need to use this precedure for my engine
-def populate_user_balance():
-    userrewards = db.session.query(UserReward.user_id, func.sum(UserReward.reward)).group_by(UserReward.user_id).all()
-    for userreward in userrewards:
-        user_id = userreward[0]
-        balance = userreward[1]
-        db.session.add(UserBalance(user_id=user_id, balance= balance, Last_update=date.today()))
-    db.session.commit()
 
 
 if __name__ == "__main__":
@@ -223,4 +215,4 @@ if __name__ == "__main__":
     populate_chore_volentary()
     populate_chores_mandatory()
     populate_user_reward_log()
-    populate_user_balance()
+    

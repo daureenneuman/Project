@@ -4,11 +4,20 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import update
-from model import connect_to_db, db, Chore, Comment, User, UserChore, UserReward
+from sqlalchemy import update, desc
+from model import connect_to_db, db, Chore, Comment, User, UserChore, UserReward, DiaryLog
 from datetime import date, timedelta
 from quickstart import service
 from sqlalchemy import func
+from apiclient import errors
+from apiclient.http import MediaFileUpload, MediaIoBaseDownload, MediaIoBaseUpload
+from quickstart import service
+import requests
+import json
+import io
+
+
+
 
 app = Flask(__name__)
 
@@ -64,7 +73,7 @@ def show_user_chores():
         day = date.today()
         user = User.query.filter(User.id == session["user.id"]).one()
         print(user)
-        userchores = UserChore.query.filter(UserChore.user_id == user.id, UserChore.date==day).all()
+        userchores = UserChore.query.filter(UserChore.user_id == user.id, UserChore.date==day, UserChore.status != "done").all()
         print(user, userchores)
         chores_vols = Chore.query.filter(Chore.is_mandatory == False).all()
         chores_mans = Chore.query.filter(Chore.is_mandatory == True, Chore.abr != "diary").all()
@@ -72,10 +81,11 @@ def show_user_chores():
         print(chores_vols)
         userchores_man_list = []
         userchores_vol_list = []
+        userchore_diary =""
         for userchore in userchores:
-             if userchore.chore in chore_diary:
+            if userchore.chore == chore_diary:
                 userchore_diary = userchore
-            print(userchore)
+                print(userchore)
             elif userchore.chore in chores_mans:
                 userchores_man_list.append(userchore)
             else:
@@ -133,12 +143,55 @@ def hide_balance():
     return redirect('/user-chores')
 
 
+@app.route("/user/diary")
+def show_diary_form():
+       
+    return render_template("diary.html")
 
+@app.route('/save-diary', methods=["POST"])
+def save_diary():
+    content = request.form["content"]
+    print(content)
+    user = User.query.filter(User.id == session["user.id"]).one()
+    day = date.today()
+    print(user)
 
+    #status  update in users_chores
+    db.session.add(DiaryLog(user = user, date = day, content = content))
+    db.session.commit()
+    rec = UserChore.query.filter(UserChore.user == user, 
+                UserChore.date==day, UserChore.chore_id==2).first()
+    print(type(rec))
+    rec.status = "done"
+    db.session.commit()
+    #quering all user logs
+    text = ""
+    day = None
+    logs = DiaryLog.query.filter(DiaryLog.user == user).order_by(DiaryLog.id).all()
+    print(logs)
+    for log in logs:
+        day = log.date
+        text = text + "\n\n" + str(day) + "\n" +log.content 
+        
+    print(text)
+    drive_file_id =  user.drive_file
+    drive_file_name = user.drive_name
+    fh  = io.BytesIO(text.encode())
+    media = MediaIoBaseUpload(fh, mimetype='text/plain')
+    file_meta_data = {
+    'name': drive_file_name, 
+    'mimeType' : 'application/vnd.google-apps.document'
+    }
 
+    updated_file = service.files().update(
+        body=file_meta_data,
+        #uploadType = 'media',
+        fileId=drive_file_id,
+        #fields = fileID,
+        media_body=media).execute()
 
-
-
+    
+    return redirect('/user-chores')
 
 
 

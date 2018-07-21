@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from sqlalchemy import func,  or_
 import sys
 import operator
-from model import (connect_to_db, db, Chore, Comment, User, UserChore, UserReward, UserBalance )
+from model import (connect_to_db, db, Chore, Comment, User, UserChore, UserReward )
 from random import choice
 
     

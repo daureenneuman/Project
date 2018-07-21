@@ -43,14 +43,32 @@ class User(db.Model):
     password = db.Column(db.String(64), nullable=False)
     age = db.Column(db.Integer, nullable=True)
     user_name = db.Column(db.String(15), nullable=False)
-    google_account = db.Column(db.String(40), nullable=True)
-    google_acccount_password = db.Column(db.String(30), nullable=True)
+    drive_file = db.Column(db.String(150), nullable=True)
+    drive_name= db.Column(db.String(15), nullable=True)
     is_admin = db.Column(db.Boolean, unique=False, default=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return f"<User name: {self.user_name} Age: {self.age} Id: {self.id}>"
+
+class DiaryLog(db.Model):
+    """Users"""
+
+    __tablename__ = "diary_logs"
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), index=True)
+    date = db.Column(db.DateTime, nullable=False)
+    content = db.Column(db.String(500), nullable=False)
+    
+    user = db.relationship("User",
+                           backref=db.backref("diary_logs", order_by=id), uselist=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<User name: {self.user_id} date: {self.date} content: {self.content}>"
 
 
 class UserChore(db.Model):
@@ -69,7 +87,7 @@ class UserChore(db.Model):
                            backref=db.backref("users_chores", order_by=id) , uselist=False)
 
     user = db.relationship("User",
-                           backref=db.backref("users_chores", order_by=id))
+                           backref=db.backref("users_chores", order_by=id), uselist=False)
 
     
     def __repr__(self):
@@ -89,7 +107,8 @@ class UserReward(db.Model):
     date = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship("User",
-                           backref=db.backref("user_rewards", order_by=id))
+                           backref=db.backref("user_rewards", order_by=id), uselist=False)
+
 
     
 
@@ -97,28 +116,6 @@ class UserReward(db.Model):
         """Provide helpful representation when printed."""
 
         return f"< User: {self.user_id} Reward id: {self.reward_id} Date: {self.date}>"
-
-
-
-class UserBalance(db.Model):
-    """Chores Types"""
-
-    __tablename__ = "user_balances"
-
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id =  db.Column(db.Integer, db.ForeignKey('users.id'), index=True)
-    balance =  db.Column(db.Integer, nullable=True)
-    Last_update = db.Column(db.DateTime, nullable=True)
-
-    user = db.relationship("User",
-                           backref=db.backref("user_balances", order_by=id))
-
-    
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"< User: {self.user_id} Balancr: {self.balance} Date: {self.Last_update}>"
 
 
 

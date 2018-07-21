@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2> My diary </h2>
+<textarea id="textextra" form ="diary" class="text" cols="86" rows ="20" name="content" placeholder="Tell your diary how is your day going? Your text will be saved with today's date"   ></textarea>
+
+<form id="diary" action='/save-diary' method="POST">
+   
+     <input id="save" type="submit" value="Save" style="width:100px; margin-left: 650px;"</input>
+
+</form>
+
+
+{% endblock %}
+
+ 

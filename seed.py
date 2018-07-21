@@ -2,8 +2,7 @@ from datetime import date, timedelta
 from sqlalchemy import func
 
 from model import (connect_to_db, db, Chore, Comment, 
-                  User, UserChore, UserReward, 
-                  UserBalance )
+                  User, UserChore, UserReward)
 from random import choice
 
 
@@ -53,15 +52,19 @@ def populate_chores_table():
 def populate_users_table():
     yoav = User(group='parents', password="123", user_name="Dad", is_admin=True)
     db.session.add(yoav)
-    alma = User(group='kids', password="123", age=11, user_name="Alma")
+    alma = User(group='kids', password="123", age=11, user_name="Alma", 
+        drive_file='1yOwC8DU0Z1dEC9FBWLvW8kF84J6K61v3PWvIXqF4NdQ', drive_name= 'alma.txt')
     db.session.add(alma)
-    goni = User(group='kids', password="123", age=8, user_name="Goni")
+    goni = User(group='kids', password="123", age=8, user_name="Goni", 
+        drive_file='18payf222xcK9pmgX03-71Og-RyTBaphiSF7wbHgNg7g', drive_name= 'goni.txt')
     db.session.add(goni)
     eric = User(group='kids', password="123", age=5, user_name="Eric")
     db.session.add(eric)
-    elison = User(group='kids', password="123", age=17, user_name="Elison")
+    elison = User(group='kids', password="123", age=17, user_name="Elison", 
+        drive_file='12jEha6W-BPVopjKStsnQmMa1o064Z-o3_jgttD934CA', drive_name='elison.txt')
     db.session.add(elison)
-    ben = User(group='kids', password="123", age=10, user_name="Ben")
+    ben = User(group='kids', password="123", age=10, user_name="Ben", 
+        drive_file='1QDKjLki58PMSbirTf7UQWgA2W--LyikHfFDeYlPvhJQ', drive_name='ben.txt')
     db.session.add(ben)
     nicole = User(group='kids', password="123", age=4, user_name="Nicole")
     db.session.add(nicole)
@@ -83,7 +86,3 @@ if __name__ == "__main__":
 
     populate_chores_table()
     populate_users_table()
-    
-
-   
-  
