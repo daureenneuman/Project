@@ -73,7 +73,8 @@ def show_user_chores():
         day = date.today()
         user = User.query.filter(User.id == session["user.id"]).one()
         print(user)
-        userchores = UserChore.query.filter(UserChore.user_id == user.id, UserChore.date==day, UserChore.status != "done").all()
+        userchores = UserChore.query.filter(UserChore.user_id == user.id, 
+                    UserChore.date==day, UserChore.status != "done").all()
         print(user, userchores)
         chores_vols = Chore.query.filter(Chore.is_mandatory == False).all()
         chores_mans = Chore.query.filter(Chore.is_mandatory == True, Chore.abr != "diary").all()

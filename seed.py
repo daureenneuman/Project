@@ -10,7 +10,7 @@ from random import choice
 def populate_chores_table():
     
     chores_seed = [("Set the table for dinner", "set-table", True, 4, 'daily', None, False),
-            ("It is time to write in your diary", "diary", True, 7, 'by_weekly', None, True),
+            ("It is time to write in your diary", "diary", True, 7, 'daily', None, True),
             ("Clear the table", "clear-table",True, 3, 'daily', None, False),
             ("Help prepare food", "cook", False, 4, 'daily',2,  False),
             ("Help carry the groceries", "groceries", True, 7, 'daily', None, False),
