@@ -1,10 +1,10 @@
 """Chores Project."""
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import update, desc
+from sqlalchemy import update, desc, func
 from model import connect_to_db, db, Chore, Comment, User, UserChore, UserReward, DiaryLog
 from datetime import date, timedelta
 from quickstart import service
@@ -15,7 +15,9 @@ from quickstart import service
 import requests
 import json
 import io
-
+from engine import show_chores, craeting_chore_dictionary, creating_child_dictionary
+from datetime import datetime
+from engine import show_chores
 
 
 
@@ -93,7 +95,7 @@ def show_user_chores():
                 userchores_vol_list.append(userchore)
 
         
-        return render_template("show_chores.html", userchores_vols=userchores_vol_list, 
+        return render_template("showchoresajax.html", userchores_vols=userchores_vol_list, 
                     userchores_mans=userchores_man_list, user=user, userchore_diary= userchore_diary)
 
 
@@ -104,18 +106,33 @@ def show_process_chores():
     if "user.id" not in session:
         return redirect('/')
     else:
-        chore_ids = request.form.getlist("chore_id")
-        for chore_id in chore_ids:
-            status=request.form["status-"+chore_id]
-            print(status)
-            if status == "done":
-                print(chore_id, status)
-                rec = UserChore.query.filter(UserChore.user_id == session["user.id"], 
+        chore_id = request.form.get("choreid")
+        user_id = session["user.id"] 
+        day = date.today()
+        rec = UserChore.query.filter(UserChore.user_id == user_id, 
                 UserChore.date==day, UserChore.chore_id==chore_id).first()
-                print(rec)
-                rec.status = status
-                db.session.commit()
-        return redirect('/user-chores')
+        rec.status = 'done'
+        if rec.chore.reward:
+                db.session.add(UserReward(user=rec.user, 
+                                    reward = rec.chore.reward, date= day))
+        db.session.commit()
+        recs_man = UserChore.query.filter(UserChore.user_id == user_id, UserChore.chore.has(is_mandatory=True), 
+                UserChore.date==day, UserChore.status != 'done',UserChore.chore_id !=2).all()
+        recs_vol = UserChore.query.filter(UserChore.user_id == user_id, UserChore.chore.has(is_mandatory =False), 
+                UserChore.date==day, UserChore.status != 'done').all()
+        num_rec_man= len(recs_man)
+        num_rec_vol= len(recs_vol)
+        if num_rec_man==0:
+            lastman ="yes"
+        else:
+            lastman ="no"
+
+        if num_rec_vol==0:
+            lastvol ="yes"
+        else:
+            lastvol ="no"
+        print(lastman, lastvol)
+        return jsonify({'status': 'ok', 'chore': chore_id, 'lastman': lastman, 'lastvol': lastvol})
 
 
 @app.route('/show-balance')
@@ -195,7 +212,39 @@ def save_diary():
     return redirect('/user-chores')
 
 
+# @app.route("/chores-report.json")
+# def chores_data():
 
+#     """Return data about chores."""
+#     day = date.today
+#     chores_man_sim = show_chores(day, True, True)
+
+
+
+
+#     man_sim_dictionary = craeting_chore_dictionary(chores_man_sim)()
+#     data_dict = {
+#                 "labels": [
+#                     "Christmas Melon",
+#                     "Crenshaw",
+#                     "Yellow Watermelon"
+#                 ],
+#                 "datasets": [
+#                     {
+#                         "data": [300, 50, 100],
+#                         "backgroundColor": [
+#                             "#FF6384",
+#                             "#36A2EB",
+#                             "#FFCE56"
+#                         ],
+#                         "hoverBackgroundColor": [
+#                             "#FF6384",
+#                             "#36A2EB",
+#                             "#FFCE56"
+#                         ]
+#                     }]
+#             }
+#     return jsonify(data_dict)
 
 
 

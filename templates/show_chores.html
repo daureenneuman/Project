@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
-
 <h2>Hi {{ user.user_name}} </h2>
 
 {% if userchores_mans %} 
@@ -11,12 +9,12 @@
 <form id= "status" action='/process-chores' method="POST">
     {% for userchore_man in userchores_mans %}
         <li id="man"> 
-            {{ userchore_man.chore.description }} 
                 <input  type="hidden" name= "chore_id" value= "{{userchore_man.chore_id}}">
                 <select  name="status-{{userchore_man.chore_id}}">
                     <option value={{userchore_man.status}}</option>
                     <option value="done">done</option>
                 </select>
+                {{ userchore_man.chore.description }} 
         </li>
     {% endfor %}
 {% else %}
@@ -59,7 +57,7 @@
 <br>
 <br>
 <br>
-<br>
+
 <br>
 <br>
 <br>

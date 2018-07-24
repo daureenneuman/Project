@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2 id="man_chores">Hi {{ user.user_name}} </h2>
+
+{% if userchores_mans %} 
+<h3>These are your chores for today</h3>
+
+<form id= "status" action='/process-chores' method="POST">
+    {% for userchore_man in userchores_mans %}
+        <li id="{{userchore_man.chore_id}}" style="list-style-type:none"> 
+                
+                <button  class ="saverbutton" data-choreid= "{{userchore_man.chore_id}}" id="{{userchore_man.chore_id}}" value="done">done</button> 
+                  {{ userchore_man.chore.description }} 
+        </li>
+    {% endfor %}
+    {% else %}
+    <h3>you are done with your mandatory chores for today. Nice job!</h3>    
+
+{% endif %}
+
+{% if userchores_vols %} 
+<h2 id="vol_chores"> You can get rewards for this chores</h2>
+    {% for userchore_vol in userchores_vols %}
+        <li id="{{userchore_vol.chore_id}}" style="list-style-type:none"> 
+            
+                
+                <button  class ="saverbutton" data-choreid= "{{userchore_vol.chore_id}}" id="{{userchore_vol.chore_id}}" value="done">done</button> 
+                {{ userchore_vol.chore.description }} :{{userchore_vol.chore.reward}}$
+        </li>
+    {% endfor %}
+
+{% endif %}
+
+   
+</form>
+   
+{% if userchore_diary %}
+    <li id="diary" style="list-style-type:none">  
+        <a href= "/user/diary" >Write in my diary</a>
+    </li>   
+ {% endif %}
+
+
+{% if "balance" in session %}
+<h1>Your balnace is: {{ session["balance"] }} dollars!</h1>
+<a href='/clear-balance'> Hide my balance</a>
+ {% else %}
+ <a href='/show-balance'> Show me my balnace</a>
+ {% endif %}
+ <br>
+<br>
+<br>
+<br>
+   <script type="text/javascript">
+        function showUpdateResults(results) {
+            if (results.status==='ok') {
+                let chore_id = results.chore;
+                console.log(results.last);
+                console.log(chore_id);
+                let item = document.getElementById(chore_id);
+                console.log(item.status);
+                console.dir(item.textContent);
+                console.log(item.innerHTML);
+                item.remove();
+                if (results.lastman ==='yes' || results.lastvol ==='yes') {
+                    window.location.replace('/user-chores');
+
+                };
+            };
+        }
+function UpdateStatus(evt) {
+    event.preventDefault()
+
+    let choredata = $(evt.target).data();
+    console.log(choredata)
+    let choreid = choredata["choreid"];
+        
+    console.log(choreid);
+       
+            var formInputs = {
+            "choreid": choreid, 
+            };
+
+        $.post('/process-chores', formInputs, showUpdateResults);
+    
+    }
+    $(".saverbutton").on("click", UpdateStatus);
+    
+      
+
+ </script>
+
+
+<br>
+<br>
+<br>
+{% endblock %}
