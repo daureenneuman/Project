@@ -65,7 +65,6 @@ def login_process():
 
 @app.route('/user-chores')
 def show_user_chores():
-    
     if "user.id" not in session:
         return redirect('/')
     else:
@@ -94,6 +93,13 @@ def show_user_chores():
             else:
                 userchores_vol_list.append(userchore)
 
+
+        user_balance_rec = db.session.query(UserReward.user_id, func.sum(UserReward.reward)).filter(
+            UserReward.user_id == user.id).group_by(UserReward.user_id).first()
+        user_balance = user_balance_rec[1]
+        print(user_balance)
+
+        session["balance"] = user_balance
         
         return render_template("showchoresajax.html", userchores_vols=userchores_vol_list, 
                     userchores_mans=userchores_man_list, user=user, userchore_diary= userchore_diary)
@@ -102,7 +108,6 @@ def show_user_chores():
 @app.route('/process-chores', methods=["POST", "GET"])
 def show_process_chores():
     
-    print("process chores func")
     if "user.id" not in session:
         return redirect('/')
     else:
@@ -149,6 +154,21 @@ def calculate_user_balance():
 
         session["balance"] = user_balance
         return redirect('/user-chores')
+
+
+@app.route('/update-session-balance', methods=["POST"])
+def update_user_balance():
+    if "balance" in session:
+        reward = request.form.get("reward")
+        reward= int(reward)
+        session["balance"] += reward
+        return jsonify({'status': 'ok', 'balance': session["balance"]})
+    else:
+         return jsonify({'status': 'nosession'})
+
+
+
+
 
 @app.route('/clear-balance')
 def hide_balance():

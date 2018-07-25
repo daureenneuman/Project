@@ -2,31 +2,32 @@
 {% block content %}
 
 <h2 id="man_chores">Hi {{ user.user_name}} </h2>
+<h3 id="manchores">These are your chores for today</h3>
 
 {% if userchores_mans %} 
-<h3>These are your chores for today</h3>
 
 <form id= "status" action='/process-chores' method="POST">
     {% for userchore_man in userchores_mans %}
         <li id="{{userchore_man.chore_id}}" style="list-style-type:none"> 
                 
-                <button  class ="saverbutton" data-choreid= "{{userchore_man.chore_id}}" id="{{userchore_man.chore_id}}" value="done">done</button> 
+        <button  id="{{userchore_man.id}}" class ="man saverbutton" data-choreid= "{{userchore_man.chore_id}}"  value="done">done</button> 
                   {{ userchore_man.chore.description }} 
         </li>
     {% endfor %}
     {% else %}
-    <h3>you are done with your mandatory chores for today. Nice job!</h3>    
+     
 
 {% endif %}
 
 {% if userchores_vols %} 
-<h2 id="vol_chores"> You can get rewards for this chores</h2>
+<h2 id="volchores"> You can get rewards for this chores</h2>
     {% for userchore_vol in userchores_vols %}
         <li id="{{userchore_vol.chore_id}}" style="list-style-type:none"> 
             
                 
-                <button  class ="saverbutton" data-choreid= "{{userchore_vol.chore_id}}" id="{{userchore_vol.chore_id}}" value="done">done</button> 
-                {{ userchore_vol.chore.description }} :{{userchore_vol.chore.reward}}$
+            <button id="{{userchore_vol.id}}" class ="vol saverbutton" data-choreid= "{{userchore_vol.chore_id}}" 
+                    data-reward="{{userchore_vol.chore.reward }}"  value="done" >done</button> 
+                    {{ userchore_vol.chore.description }} :{{userchore_vol.chore.reward}}$
         </li>
     {% endfor %}
 
@@ -43,7 +44,8 @@
 
 
 {% if "balance" in session %}
-<h1>Your balnace is: {{ session["balance"] }} dollars!</h1>
+<h1 >Your balnace is: <em id="balance"> {{ session["balance"] }}</em> dollars!</h1>
+<br>
 <a href='/clear-balance'> Hide my balance</a>
  {% else %}
  <a href='/show-balance'> Show me my balnace</a>
@@ -63,11 +65,16 @@
                 console.dir(item.textContent);
                 console.log(item.innerHTML);
                 item.remove();
-                if (results.lastman ==='yes' || results.lastvol ==='yes') {
-                    window.location.replace('/user-chores');
-
+                if (results.lastman ==='yes') {
+                    document.getElementById("manchores").innerHTML= "Done with must chores! NICE";
                 };
+
+                if (results.lastvol ==='yes') {
+                    document.getElementById("volchores").innerHTML= "Done with reward chores GREAT JOB!";
+                };
+                    
             };
+            
         }
 function UpdateStatus(evt) {
     event.preventDefault()
@@ -92,6 +99,36 @@ function UpdateStatus(evt) {
  </script>
 
 
+<script>
+
+ function new_balance(results) {
+            if (results.status==='ok') {
+                let new_balance = results.balance;
+                let old_balance = document.getElementById("balance");
+                old_balance.innerHTML =new_balance;
+            };
+
+        };
+
+function updatebalance(evt) {
+    event.preventDefault()
+
+    let rewarddata = $(evt.target).data();
+    let reward = rewarddata["reward"];
+        
+    console.log(reward);
+       
+            var formInputs = {
+            "reward": reward
+            };
+
+        $.post('/update-session-balance', formInputs, new_balance);
+    
+    }
+
+$(".vol").on("click", updatebalance);
+
+</script>
 <br>
 <br>
 <br>
