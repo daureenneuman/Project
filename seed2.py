@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from sqlalchemy import func
 
 from model import (connect_to_db, db, Chore, Comment, 
-                  User, UserChore, UserReward)
+                  User, UserChore, UserReward, UserMessage)
 from random import choice, shuffle
 
 
@@ -199,7 +199,8 @@ def populate_user_reward_log():
 
 
 
-# I need to use this precedure for my engine
+
+
 
 
 if __name__ == "__main__":

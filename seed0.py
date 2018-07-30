@@ -6,32 +6,24 @@ from quickstart import service
 import requests
 import json
 import io
+from quickstartgemail  import service_gemail
+import base64
+from email.mime.text import MIMEText
+
+
 folder_id ='120NRhCavpKVm2oLn1S35-bQiiNh5LKP7'
 
-def insert_file(service, folder_id, name):
-  """Insert new file.
-
-  Args:
-    service: Drive API service instance.
-    title: Title of the file to insert, including the extension.
-    description: Description of the file to insert.
-    parent_id: Parent folder's ID.
-    mime_type: MIME type of the file to insert.
-    filename: Filename of the file to insert.
-  Returns:
-    Inserted file metadata if successful, None otherwise.
-  """
+# def insert_file(service, folder_id, name):
+#     meta_data = {
+#     'name': name,
+#     'parents': [folder_id], 
+#      'mimeType' : 'application/vnd.google-apps.document'
+#     }
   
-  meta_data = {
-    'name': name,
-    'parents': [folder_id], 
-     'mimeType' : 'application/vnd.google-apps.document'
-    }
-  
-  file = service.files().create(body=meta_data, fields='id').execute()
+#   file = service.files().create(body=meta_data, fields='id').execute()
 
-    # Uncomment the following line to print the File ID
-  return file
+#     # Uncomment the following line to print the File ID
+#   return file
 # calling the function three times for all kids in the right age"
 
 # alma_file = insert_file(service, folder_id, name='alma.txt')
@@ -58,23 +50,41 @@ def insert_file(service, folder_id, name):
 #
 # updatingfileId=file['id'])
 
-content = "thios is a test to see of this fucken shit update workes who who who" +'\n'+"hjhkjhkhj"
-print(content)
+# content = "this is a test to see if the update workes " +'\n'+"new line"
+# print(content)
 
-fh  = io.BytesIO(content.encode())
-media = MediaIoBaseUpload(fh, mimetype='text/plain')
-file_meta_data = {
-    'name': 'elison.txt',
+# fh  = io.BytesIO(content.encode())
+# media = MediaIoBaseUpload(fh, mimetype='text/plain')
+# file_meta_data = {
+#     'name': 'elison.txt',
     
-     'mimeType' : 'application/vnd.google-apps.document'
-    }
+#      'mimeType' : 'application/vnd.google-apps.document'
+#     }
 
-updated_file = service.files().update(
-        body=file_meta_data,
-        #uploadType = 'media',
-        fileId='12jEha6W-BPVopjKStsnQmMa1o064Z-o3_jgttD934CA',
-        #fields = fileID,
-        media_body=media).execute()
+# updated_file = service.files().update(
+#         body=file_meta_data,
+#         #uploadType = 'media',
+#         fileId='12jEha6W-BPVopjKStsnQmMa1o064Z-o3_jgttD934CA',
+#         #fields = fileID,
+#         media_body=media).execute()
 
-content_new = service.files().export(fileId='12jEha6W-BPVopjKStsnQmMa1o064Z-o3_jgttD934CA', mimeType='text/plain').execute()
+# content_new = service.files().export(fileId='12jEha6W-BPVopjKStsnQmMa1o064Z-o3_jgttD934CA', mimeType='text/plain').execute()
 
+#################################################
+
+
+def create_message(sender, to, subject, message_text):
+
+      message = MIMEText(message_text)
+      message['to'] = to
+      message['from'] = sender
+      message['subject'] = subject
+      return {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}
+
+def send_message(service, user_id, message):
+
+    message = (service.users().messages().send(userId=user_id, body=message).execute())
+
+
+# message = create_message(sender= 'daureenn@gmail.com', to = 'yoav.neuman@gmail.com', subject='test123',  message_text="Sent from my python program!!!")
+# send_message(service=service_gemail, user_id='me', message=message)

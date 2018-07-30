@@ -2,9 +2,10 @@
 <html>
 <head>
   <title>Chores</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/style.css">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> -->
 </head>
 <body class = "w3-margin-left" >
   {%if "user.id" in session: %}
@@ -12,9 +13,7 @@
   {% endif %}
   <h4 id="chores">Your Daily Chores   </h4>
   
- {%if 'admin' in session %}
-  Hi {{session["user_name"]}} You are an administratore!
-{% endif %}
+ 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
    {% for message in messages %}
@@ -22,7 +21,13 @@
 {% endfor %}
 {% endif %}
 {% endwith %}
-{% block content %} put your content here {% endblock %}
+
+{% block content %}
+{% endblock %}
+
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 </body>
 </html>

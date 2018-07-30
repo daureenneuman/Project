@@ -1,15 +1,35 @@
+html {
+    margin-left: 80px;
+    margin-top: 20px;
+    
+
+};
+
+   /* display: table;
+}
+div.add-text {
+    display: table-row;
+     break: break-all
+}
+div.add-radio {
+ display: table-row;
+
+}
+label, input {
+    display: table-cell;
+    margin-bottom: 5px;        
+    background-size: 15px;
+    max-width: 200px; 
+    word-wrap: break-word;
+}
+label {
+    padding-right: 10px;
+}
+
 h2 {
      text-align: left;
 }
 
-body {
-background-color: lightblue;
-font-size: 20px;
-font-family: "Comic Sans MS", cursive, sans-serif;
-margin-left: 20px;
-overflow: visible;
-
-}
 #textextra {
 text-align: left;
 width:700px;
@@ -78,4 +98,5 @@ height: 40;
     vertical-align: middle
 
 }
-
+.popup-overlay.active{
+/*/*/*/*/*/*/*/*/*/

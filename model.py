@@ -21,7 +21,7 @@ class Chore(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     description = db.Column(db.String(300), nullable=False)
-    abr = db.Column(db.String(15), nullable=False)
+    abr = db.Column(db.String(15), nullable=True)
     is_mandatory = db.Column(db.Boolean, nullable=False)
     min_age = db.Column(db.Integer, nullable=True)
     chore_often = db.Column(Enum('daily', 'homework', 'weekly', 'by_weekly', name='chore_often'), default='voluntary as needed')
@@ -95,6 +95,19 @@ class UserChore(db.Model):
 
         return f"< User: {self.user_id} Chores: {self.chore_id} Date: {self.date}>"
 
+class UserMessage(db.Model):
+    """User Message"""
+
+    __tablename__ = "user_messages"
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    from_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), index=True)
+    message = db.Column(db.String(100), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    status =  db.Column(Enum('open', 'close', name='mes_status'))
+    
+    user = db.relationship("User",
+                           backref=db.backref("user_messages", order_by=id), uselist=False)
 
 class UserReward(db.Model):
     """Chores Types"""

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 id="mes-add" class="title"></h1> 
+Add chore <button id="add">Add chore</button><br>
+
+
+<form id= "addchore" action='/admin-new-chore' method="POST" style="display:none">
+  <div class="add-radio">
+    <label for="desc">Chore description: </label>
+    <input type="text" name="desc" id="desc" required> </input>
+  </div>
+ <div class="add-radio">
+    <label for="age">Minimum age?  </label>
+    <input type="number" name="age" id="age" required>
+</div>
+<div id="must" class="add-radio">
+    <label for="must">Must or voluntry? </label>
+    Yes <input type="radio" name="must"  value="true" required></input>
+    No <input type="radio" name="must"  value="false" required></input>
+</div>
+<div id="sim" class="add-radio">
+    <label for="sim">Simultaneously? </label>
+    Yes <input type="radio" name="sim"  value="true" required></input>
+    No <input type="radio" name="sim"  value="false" required></input>
+</div>
+<div id="often" class="add-radio">
+    <label for="often">How frequent? </label>
+    daily <input type="radio" name="often" value="daily" required></input>
+    weekly <input type="radio" name="often" value="weekly" required></input>
+    twice a week <input type="radio" name="often" value="by_weekly"required></input>
+</div>
+<div>
+<button id="submit-add" type="submit">Save</button><br>
+</div>
+</form> 
+<br>
+
+
+<form id= "delete" action='/delete-chore' method="POST">
+{% for chore in chores %}
+
+<div class="row" style="margin-top: 4px" style="font-size:14px">
+    <div id="{{chore.id}}" class="col-md-2" style="font-size:20px">
+         {{ chore.description}}
+    </div>
+    <div class="col-md-2" style="margin-top: 4px">
+        <button  class ="chore-delete btn-danger" data-choreid= "{{chore.id}}" value="delete">delete</button> 
+    </div>
+</div>
+</form>
+                
+       
+{% endfor %}
+<!-- add chore to db -->
+<script type="text/javascript">
+   "use strict";
+$("#addchore").hide();
+
+
+function addedchore(results) {
+            if (results.status==='ok') {
+                console.log(results.desc);
+                let desc = results.desc;
+                $("#mes-add").html("chore "+desc+" added to chore list");
+                let message = $("#mes-add").html();
+                $("#addchore").hide();
+                
+
+                };
+} ;
+function addchore(evt) {
+    evt.preventDefault();
+    
+    let must = $("#must input[type='radio']:checked").val();
+     let must_bol = (must === 'true');
+    let sim = $("#sim input[type='radio']:checked").val();
+     let sim_bul = (sim === 'true');
+     let often =  $("#often input[type='radio']:checked").val();
+     
+    var formInputs =
+     {"desc": $("#desc").val(),
+     "age": $("#age").val(),
+     "must": must_bol,
+     "sim":  sim_bul,
+     "often" :  often
+     };
+     console.log(formInputs);
+    
+     $("#mes-add").show();
+    $('#addchore')[0].reset();
+         
+    $.post('/admin-new-chore', formInputs, addedchore);
+};
+       
+    $("#addchore").on("submit" , addchore);
+    
+// show form to add chore
+    function showchoreform(evt) {
+    
+    let message = $("#mes-add").html();
+    console.log("in show");
+    console.log(message);
+    $("#mes-add").hide();
+    $("#addchore").show();
+
+    
+};
+
+  $("#add").on("click", showchoreform);
+
+
+
+ </script>
+<!-- #############################################################
+ -->
+<!-- delete chore -->
+<script>
+  "use strict";
+function returnstatus(results) {
+            if (results.status==='ok') {
+                let chore_id = results.chore;
+                let item = $(".chore-delete");
+                item.remove();
+                };
+            
+        }
+function updatechore(evt) {
+    evt.preventDefault();
+    
+    let choredata = $(evt.target).data();
+    console.log(choredata)
+    let choreid = choredata["choreid"];
+        
+    console.log(choreid);
+       
+            var formInputs = {
+            "choreid": choreid, 
+            };
+
+           
+    $.post('/admin-update-chore', formInputs, returnstatus);
+    };
+       
+    $("#delete").on("submit" , updatechore);
+    
+
+
+
+
+
+
+
+</script>
+
+
+
+{% endblock %}
+
+
+
+function getChecked() {
+    let selected = $("#rates input[type='radio']:checked");
+    console.log(selected.val());  
+}

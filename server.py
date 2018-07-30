@@ -5,9 +5,10 @@ from flask import Flask, render_template, request, flash, redirect, session, jso
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import update, desc, func
-from model import connect_to_db, db, Chore, Comment, User, UserChore, UserReward, DiaryLog
+from model import connect_to_db, db, Chore, Comment, User, UserChore, UserReward, DiaryLog, UserMessage
 from datetime import date, timedelta
 from quickstart import service
+from email.mime.text import MIMEText
 from sqlalchemy import func
 from apiclient import errors
 from apiclient.http import MediaFileUpload, MediaIoBaseDownload, MediaIoBaseUpload
@@ -18,6 +19,9 @@ import io
 from engine import show_chores, craeting_chore_dictionary, creating_child_dictionary
 from datetime import datetime
 from engine import show_chores
+from quickstartgemail  import service_gemail
+import base64
+from seed0 import send_message, create_message
 
 
 
@@ -31,7 +35,7 @@ day = date.today()
 @app.route('/')
 def index():
     """Homepage Login+Add-users."""
-   
+    session.clear() 
     return render_template("homepage.html")
 
 
@@ -51,13 +55,19 @@ def login_process():
     password = request.form["password"]
     user = User.query.filter(User.user_name == name, User.password==password).first()
     
-    if user:
+    if user.is_admin:
+        session["user.id"] = user.id
+        session["user.name"] = user.user_name
+        session["admin"] = True
+        messages = UserMessage.query.filter(UserMessage.status == 'open').all()
+        return render_template('admin.html', user=user, messages=messages)
+
+    elif user:
         session["user.id"] = user.id
         flash("You are looged in")
-        if user.is_admin:
-            session["admin"] = True
-        return redirect('/user-chores')
-
+        session["user.name"] = user.user_name
+        return redirect('/user-chores') 
+        
     else:
         flash("Wrong name or password Please try again")
         return redirect("/")
@@ -78,8 +88,9 @@ def show_user_chores():
                     UserChore.date==day, UserChore.status != "done").all()
         print(user, userchores)
         chores_vols = Chore.query.filter(Chore.is_mandatory == False).all()
-        chores_mans = Chore.query.filter(Chore.is_mandatory == True, Chore.abr != "diary").all()
-        chore_diary = Chore.query.filter(Chore.abr == "diary").one()
+        chores_mans = Chore.query.filter(Chore.is_mandatory == True, Chore.id != 2).all()
+        chore_diary = Chore.query.filter(Chore.id == 2).one()
+        print("this is man chores {}".format(chores_mans))
         print(chores_vols)
         userchores_man_list = []
         userchores_vol_list = []
@@ -186,6 +197,8 @@ def show_diary_form():
        
     return render_template("diary.html")
 
+
+
 @app.route('/save-diary', methods=["POST"])
 def save_diary():
     content = request.form["content"]
@@ -220,7 +233,7 @@ def save_diary():
     'name': drive_file_name, 
     'mimeType' : 'application/vnd.google-apps.document'
     }
-
+    print(service)
     updated_file = service.files().update(
         body=file_meta_data,
         #uploadType = 'media',
@@ -231,141 +244,100 @@ def save_diary():
     
     return redirect('/user-chores')
 
-
-# @app.route("/chores-report.json")
-# def chores_data():
-
-#     """Return data about chores."""
-#     day = date.today
-#     chores_man_sim = show_chores(day, True, True)
+@app.route('/report')
+def updatechore():
 
 
-
-
-#     man_sim_dictionary = craeting_chore_dictionary(chores_man_sim)()
-#     data_dict = {
-#                 "labels": [
-#                     "Christmas Melon",
-#                     "Crenshaw",
-#                     "Yellow Watermelon"
-#                 ],
-#                 "datasets": [
-#                     {
-#                         "data": [300, 50, 100],
-#                         "backgroundColor": [
-#                             "#FF6384",
-#                             "#36A2EB",
-#                             "#FFCE56"
-#                         ],
-#                         "hoverBackgroundColor": [
-#                             "#FF6384",
-#                             "#36A2EB",
-#                             "#FFCE56"
-#                         ]
-#                     }]
-#             }
-#     return jsonify(data_dict)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# @app.route('/process_add_chore', methods=["POST"])    
-# def process_add_chore():
-#     description= request.form["description"]    
-#     chore = Chore(description= description)
-#     db.session.add(chore)
-#     db.session.commit()
+    return render_template("update_chore.html")
     
 
-#     return redirect("/chores")
+
+@app.route('/admin-chores')
+def show_chores():
+    if "user.id" in session:
+        if "admin" in session:
+            chores = Chore.query.all()
+            return render_template("all_chores.html", chores=chores)
+        else:
+            flash("You are not authorized to access admin pages")
+            return redirect('/user-chores')
+    else:
+        flash("Please login")
+        return redirect ("/")
+
+@app.route('/admin-new-chore', methods=["POST"])
+def update_chore():
+    description = request.form.get("desc")
+    min_age = request.form.get("age")
+    is_man = ('true' == request.form.get("must"))
+    print("is_man value")
+    print("look for man")
+    print("look here")
+    print(is_man)
+    print(type(is_man))
+    is_sim = ('true' == request.form.get("sim"))
+    print("look for sim")
+    print("is_sim value")
+    print(is_sim)
+    print(type(is_sim))
+    often = request.form.get("often")
+    chore =  Chore.query.filter(Chore.description == description).first()
+    if chore:
+        print("chore exsist")
+        print(chore)
+        
+        chores = Chore.query.all()
+        return render_template("all_chores.html", chores=chores)
+    else:
+        chore = Chore(description=description, is_mandatory= is_man, 
+        min_age=min_age, chore_often=often, reward=0, is_simultaneously=is_sim)
+        db.session.add(chore)
+        db.session.commit() 
+        desc=chore.description
+        print("added to data base")
+        return jsonify({'status': 'ok', "desc": desc})
+
+@app.route('/send')
+def send_mail():
+    message_text = "Pay {} {}$".format(session["user.name"], session["balance"])
+    subject = "{} balance".format(session["user.name"])
+    message = create_message(sender= 'daureenn@gmail.com', to = 'daureenn@gmail.com', 
+    subject=subject,  message_text=message_text)
+    print(message)
+    send_message(service_gemail,'me', message)
+    print("sucess")
+    user_message = UserMessage.query.filter(UserMessage.from_user_id == session["user.id"], UserMessage.status=='open').first()
+    # If there is no open request add to DB 
+    if not user_message:
+        db.session.add(UserMessage(from_user_id =session["user.id"],
+            message=message_text,  date= date.today(), status='open'))
+        db.session.commit()
+
+    return jsonify({'status': 'ok'})
+
+@app.route('/process-payment', methods=["POST"])
+def reedem_balance():
+    # add record in negative to user_log update status in message to close
+    mesid = request.form.get("mesid")
+    user_mes = UserMessage.query.filter(UserMessage.id ==mesid).one()
+    user_id = user_mes.from_user_id
+    bal_rec = db.session.query(UserReward.user_id, func.sum(UserReward.reward)).filter(
+            UserReward.user_id == user_id).group_by(UserReward.user_id).first()
+    neg_balance = -bal_rec[1]
+    db.session.add(UserReward(user_id =user_id, reward=neg_balance,  date= date.today()))
+    db.session.commit()
+    print("added a record to userreward")
+    user_message_rec = UserMessage.query.filter(UserMessage.from_user_id == user_id, 
+                    UserMessage.status=='open').one()
+    user_message_rec.status='close'
+    db.session.commit()
+
+    return jsonify({'status': 'ok', 'mesid': mesid})
 
 
 
-# @app.route('/rewards')
-# def show_rewards():
-   
-#     rewards = Reward.query.all()
-#     add_reward = request.args.get('add_reward')
-
-#     return render_template("show_rewards.html", rewards=rewards, add_reward=add_reward)
 
 
-
-# @app.route('/process_add_reward', methods=["POST"])    
-# def process_add_reward():
-#     description= request.form["description"] 
-#     points= request.form["points"] 
-#     reward = Reward(description= description, points=points)
-#     db.session.add(reward)
-#     db.session.commit()
-    
-
-#     return redirect("/rewards")
-
-
-# @app.route('/reasons')
-# def show_reasons():
-   
-#     reasons = Reason.query.all()
-#     add_reason = request.args.get('add_reason')
-
-#     return render_template("show_reasons.html", reasons=reasons, add_reason=add_reason)
-
-
-
-# @app.route('/process_add_reason', methods=["POST"])    
-# def process_add_reason():
-#     description= request.form["description"] 
-#     reason = Reason(description= description)
-#     db.session.add(reason)
-#     db.session.commit()
-    
-
-#     return redirect("/reasons")
-
-
-
-# @app.route("/")
-# def go_to_login():
-#     return redirect("/login")
-
-# @app.route("/login")
-# def login_form():
-#     return render_template("homepage.html")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-################################################
 
 
 if __name__ == "__main__":

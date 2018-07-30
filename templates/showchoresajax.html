@@ -2,15 +2,16 @@
 {% block content %}
 
 <h2 id="man_chores">Hi {{ user.user_name}} </h2>
-<h3 id="manchores">These are your chores for today</h3>
 
+<h2 id="manchores">These are your chores for today</h2>
 {% if userchores_mans %} 
 
 <form id= "status" action='/process-chores' method="POST">
     {% for userchore_man in userchores_mans %}
         <li id="{{userchore_man.chore_id}}" style="list-style-type:none"> 
                 
-        <button  id="{{userchore_man.id}}" class ="man saverbutton" data-choreid= "{{userchore_man.chore_id}}"  value="done">done</button> 
+        <button  id="{{userchore_man.id}}" class ="man saverbutton" data-choreid= "{{userchore_man.chore_id}}"  
+        value="done" style="backgroung:blue">done</button> 
                   {{ userchore_man.chore.description }} 
         </li>
     {% endfor %}
@@ -18,9 +19,9 @@
      
 
 {% endif %}
-
-{% if userchores_vols %} 
 <h2 id="volchores"> You can get rewards for this chores</h2>
+{% if userchores_vols %} 
+
     {% for userchore_vol in userchores_vols %}
         <li id="{{userchore_vol.chore_id}}" style="list-style-type:none"> 
             
@@ -44,17 +45,36 @@
 
 
 {% if "balance" in session %}
-<h1 >Your balnace is: <em id="balance"> {{ session["balance"] }}</em> dollars!</h1>
-<br>
-<a href='/clear-balance'> Hide my balance</a>
+<div id="user-balance">
+<h4  >Your balnace is: <b id="show_balnace"> {{ session["balance"] }}</b> 
+    dollars! <button id="redeem" type="button" class="btn btn-light" style="color:blue"> Reedem</button>  </h4>
+</div>
+<h3 id="after_send"></h3>
  {% else %}
  <a href='/show-balance'> Show me my balnace</a>
  {% endif %}
  <br>
-<br>
-<br>
-<br>
+
+<script>
+function showsendResults(results) {
+        console.log(results.status);
+            if (results.status==='ok') {
+                $("#after_send").html("A request to reedem your balance was sent to mom");
+            
+            };
+}
+
+
+function requestreedem(evt) {
+    $.get('/send', showsendResults);
+}
+
+ $("#redeem").on("click", requestreedem);
+</script>
+
+
    <script type="text/javascript">
+   
         function showUpdateResults(results) {
             if (results.status==='ok') {
                 let chore_id = results.chore;
@@ -64,6 +84,7 @@
                 console.log(item.status);
                 console.dir(item.textContent);
                 console.log(item.innerHTML);
+                // item.prop( "disabled", true );
                 item.remove();
                 if (results.lastman ==='yes') {
                     document.getElementById("manchores").innerHTML= "Done with must chores! NICE";
@@ -94,17 +115,14 @@ function UpdateStatus(evt) {
     }
     $(".saverbutton").on("click", UpdateStatus);
     
-      
-
- </script>
-
+</script>
 
 <script>
 
  function new_balance(results) {
             if (results.status==='ok') {
                 let new_balance = results.balance;
-                let old_balance = document.getElementById("balance");
+                let old_balance = document.getElementById("show_balnace");
                 old_balance.innerHTML =new_balance;
             };
 
