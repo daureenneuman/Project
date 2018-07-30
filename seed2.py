@@ -2,7 +2,7 @@ from datetime import date, timedelta
 from sqlalchemy import func
 
 from model import (connect_to_db, db, Chore, Comment, 
-                  User, UserChore, UserReward, UserMessage)
+                  User, UserChore, UserReward, UserMessage, DiaryLog)
 from random import choice, shuffle
 
 
@@ -198,10 +198,24 @@ def populate_user_reward_log():
 
 
 
+def populate_user_diary_log():
+    for i in range(1, 10):
+        day = date.today() - timedelta(i)
+        for j in range (2,5):
+        
+            day = date.today() - timedelta(i)
+            db.session.add(DiaryLog(user_id = j, date = day, 
+            content ="I had the best day EVER today. I woke up this morning, the sun was shining through the curtains and I could smell breakfast cooking downstairs.  I jumped out of my bed, threw on my school clothes and skipped down to the kitchen. "))
+            
+            db.session.add(DiaryLog(user_id = j, date = day, 
+            content ="A delicious breakfast of pancakes with syrup was waiting for me on the table and I gobbled it down as quick as a flash. I grabbed my school bag, shouted “Bye!” to my mum and dashed out of the door to school." )) 
+            
+            db.session.add(DiaryLog(user_id = j, date = day, 
+            content ="When I arrived at school, my teacher handed my homework back to me and a huge grin spread across her face. Guess what? I got 20 out of 20! I couldn’t believe it! We had my best lessons in the morning (Literacy and Geography)"))
 
+            db.session.commit()
 
-
-
+            
 
 if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
@@ -216,4 +230,5 @@ if __name__ == "__main__":
     populate_chore_volentary()
     populate_chores_mandatory()
     populate_user_reward_log()
+    populate_user_diary_log()
     
