@@ -1,56 +1,88 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 id="mes-add" class="title"></h1> 
-Add chore <button id="add">Add chore</button><br>
+<div class="container">
 
-
-<form id= "addchore" action='/admin-new-chore' method="POST" style="display:none">
-  <div class="add-radio">
-    <label for="desc">Chore description: </label>
+<div class="row">
+<div class="col-4">
+<h4 id="mes-add" class="title"></h4> 
+<button id="add" class="btn btn-outline-secondary btn-lg" >Add chore</button>
+<form id= "addchore" class="form-horizontal" action='/admin-new-chore' method="POST" style="display:none">
+  
+    <label class="control-label col-sm-4" for="desc">Description: </label>
+  <div class="col-10" style="width: 400px">
     <input type="text" name="desc" id="desc" required> </input>
   </div>
- <div class="add-radio">
-    <label for="age">Minimum age?  </label>
+ 
+    <label class="control-label col-sm-8" for="age">Minimum age?  </label>
+    <div class="col-sm-4">
     <input type="number" name="age" id="age" required>
-</div>
-<div id="must" class="add-radio">
-    <label for="must">Must or voluntry? </label>
+    </div>
+
+<div id="must" class="add-radio form-group">
+    <label class="control-label col-sm-4" for="must">Must? </label>
+    <div class="col-sm-10">
     Yes <input type="radio" name="must"  value="true" required></input>
     No <input type="radio" name="must"  value="false" required></input>
+    </div>
 </div>
-<div id="sim" class="add-radio">
-    <label for="sim">Simultaneously? </label>
+<div id="sim" class="add-radio form-group">
+    <label class="control-label col-sm-4" for="sim">Simultaneously? </label>
+    <div class="col-sm-10">
     Yes <input type="radio" name="sim"  value="true" required></input>
     No <input type="radio" name="sim"  value="false" required></input>
+    </div>
+
 </div>
-<div id="often" class="add-radio">
-    <label for="often">How frequent? </label>
+<div id="often" class="add-radio form-group">
+    <label class="control-label col-sm-4" for="often">Frequency? </label>
+    <div class="col-sm-10">
     daily <input type="radio" name="often" value="daily" required></input>
     weekly <input type="radio" name="often" value="weekly" required></input>
-    twice a week <input type="radio" name="often" value="by_weekly"required></input>
+    biweekly <input type="radio" name="often" value="by_weekly"required></input>
+    </div>
+</div>
+<div id="often" class="add-radio form-group" style="text-align:left">
+    <label class="control-label col-sm-4" for="often"> </label>
+    <div class="col-sm-10">
+    <button class="btn btn-outline-secondary btn-lg" id="submit-add" type="submit" style="padding: 5px 60px">Save</button><br>
+    </div>
 </div>
 <div>
-<button id="submit-add" type="submit">Save</button><br>
-</div>
-</form> 
-<br>
-
-
-<form id= "delete" action='/delete-chore' method="POST">
-{% for chore in chores %}
-
-<div class="row" style="margin-top: 4px" style="font-size:14px">
-    <div id="{{chore.id}}" class="col-md-2" style="font-size:20px">
-         {{ chore.description}}
-    </div>
-    <div class="col-md-2" style="margin-top: 4px">
-        <button  class ="chore-delete btn-danger" data-choreid= "{{chore.id}}" value="delete">delete</button> 
-    </div>
 </div>
 </form>
-                
-       
-{% endfor %}
+<br>
+</div>
+
+<div class="col-4" >
+<table  style= "font-family: arial, sans-serif; border-collapse: collapse; width: 100%">
+  <h3 >Reward chores</h3>
+  {% for chore in chores %}
+  <tr >
+
+   {% if chore.reward  %}
+   <th style="font-weight: normal">{{ chore.description}}, {{chore.reward}}$</th>
+   
+   {% endif %}
+   </tr>
+  {% endfor %}
+</table>
+</div>
+
+<div class="col-4">
+<table  style= "font-family: arial, sans-serif; border-collapse: collapse; width: 100%" >
+<h3>Must chores</h3>
+  {% for chore in chores %}
+  {% if not chore.reward  %}
+  <th style="font-weight: normal">{{ chore.description}}</th>
+   {% endif %}
+   </tr>
+  {% endfor %}
+
+</table>
+</div>
+</div>
+</div>
+
 <!-- add chore to db -->
 <script type="text/javascript">
    "use strict";
@@ -61,7 +93,7 @@ function addedchore(results) {
             if (results.status==='ok') {
                 console.log(results.desc);
                 let desc = results.desc;
-                $("#mes-add").html("chore "+desc+" added to chore list");
+                $("#mes-add").html(desc+" added to chore list");
                 let message = $("#mes-add").html();
                 $("#addchore").hide();
                 
@@ -101,7 +133,9 @@ function addchore(evt) {
     console.log("in show");
     console.log(message);
     $("#mes-add").hide();
+    $("#add").hide();
     $("#addchore").show();
+
 
     
 };
@@ -156,9 +190,3 @@ function updatechore(evt) {
 
 {% endblock %}
 
-
-
-function getChecked() {
-    let selected = $("#rates input[type='radio']:checked");
-    console.log(selected.val());  
-}

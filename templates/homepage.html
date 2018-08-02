@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <br>
-
-<form id= "login" action='/process_login' method="POST">
- Name:  <input type="text" name="name" required>
- Password <input type="text" name="password" required>
-<input type="submit">
+<div id="login-page" class="container" > 
+    <div class="row"> 
+<div class="col-5">
+<form id= "login" class="form-group"action='/process_login' method="POST" style="width:40%">
+ Name:  <input class="form-control input-lg" type="text" name="name" required></input>
+ Password <input class="form-control input-lg" type="text" name="password" required></input>
+<br>
+<input class="btn btn-outline-primary btn-lg" type="submit"></input>
 </form>
-
-
-
+</div>
+<div class="col-7">
+ <img src="/static/pic2.jpg" width="800" height="400">
+</div>
+</div>
+</div>
 {% endblock %}
-
-

@@ -8,7 +8,6 @@ from random import choice
     
 def show_chores(day, mandatory, simuletansely):
     weekday = day.weekday()
-    print(weekday)
     if weekday == 2:
         chores_often = Chore.query.filter(or_(Chore.chore_often == 'by_weekly', 
             Chore.chore_often == 'daily', Chore.chore_often == 'homework')).all()
@@ -16,15 +15,12 @@ def show_chores(day, mandatory, simuletansely):
     elif weekday == 5:
         chores_often = Chore.query.filter(or_(Chore.chore_often == 'by_weekly', 
             Chore.chore_often == 'weekly', Chore.chore_often =='daily')).all()
-        print(chores_often)
 
     elif weekday  in [1,3,4]:
         chores_often = Chore.query.filter(or_(Chore.chore_often == 'homework', 
            Chore.chore_often == 'daily')).all()
-        print(chores_often)
     else: 
         chores_often = Chore.query.filter(Chore.chore_often == 'daily').all()
-        print(chores_often)    
     
     chores = []
      
@@ -62,16 +58,11 @@ def craeting_chore_dictionary(chores):
     
 def creating_child_dictionary(chores):
     child_dictionary = {}
-    print(chores)
     users = User.query.filter(User.group=='kids').order_by(User.age).all()
-    print(users)
     for user in users:
-        print(user.user_name, user.age)
         chore_dict= {}      
-
         chore_list = []
         for chore in chores:
-            print(chore.min_age, chore.abr)
             if chore.min_age <= user.age:
                 chore_dict[chore] = 0
                 child_dictionary[user] = chore_dict

@@ -22,6 +22,7 @@ from engine import show_chores
 from quickstartgemail  import service_gemail
 import base64
 from seed0 import send_message, create_message
+from random import choice, shuffle, random
 
 
 
@@ -79,26 +80,20 @@ def show_user_chores():
         return redirect('/')
     else:
 
-        print("Hello you are in show user function")
-        print(session["user.id"])
         day = date.today()
         user = User.query.filter(User.id == session["user.id"]).one()
-        print(user)
         userchores = UserChore.query.filter(UserChore.user_id == user.id, 
                     UserChore.date==day, UserChore.status != "done").all()
-        print(user, userchores)
         chores_vols = Chore.query.filter(Chore.is_mandatory == False).all()
         chores_mans = Chore.query.filter(Chore.is_mandatory == True, Chore.id != 2).all()
         chore_diary = Chore.query.filter(Chore.id == 2).one()
-        print("this is man chores {}".format(chores_mans))
-        print(chores_vols)
+        
         userchores_man_list = []
         userchores_vol_list = []
         userchore_diary =""
         for userchore in userchores:
             if userchore.chore == chore_diary:
                 userchore_diary = userchore
-                print(userchore)
             elif userchore.chore in chores_mans:
                 userchores_man_list.append(userchore)
             else:
@@ -108,11 +103,10 @@ def show_user_chores():
         user_balance_rec = db.session.query(UserReward.user_id, func.sum(UserReward.reward)).filter(
             UserReward.user_id == user.id).group_by(UserReward.user_id).first()
         user_balance = user_balance_rec[1]
-        print(user_balance)
 
         session["balance"] = user_balance
         
-        return render_template("showchoresajax.html", userchores_vols=userchores_vol_list, 
+        return render_template("show_chores.html", userchores_vols=userchores_vol_list, 
                     userchores_mans=userchores_man_list, user=user, userchore_diary= userchore_diary)
 
 
@@ -147,7 +141,6 @@ def show_process_chores():
             lastvol ="yes"
         else:
             lastvol ="no"
-        print(lastman, lastvol)
         return jsonify({'status': 'ok', 'chore': chore_id, 'lastman': lastman, 'lastvol': lastvol})
 
 
@@ -161,8 +154,6 @@ def calculate_user_balance():
         user_balance_rec = db.session.query(UserReward.user_id, func.sum(UserReward.reward)).filter(
             UserReward.user_id == user).group_by(UserReward.user_id).first()
         user_balance = user_balance_rec[1]
-        print(user_balance)
-
         session["balance"] = user_balance
         return redirect('/user-chores')
 
@@ -176,8 +167,6 @@ def update_user_balance():
         return jsonify({'status': 'ok', 'balance': session["balance"]})
     else:
          return jsonify({'status': 'nosession'})
-
-
 
 
 
@@ -202,29 +191,24 @@ def show_diary_form():
 @app.route('/save-diary', methods=["POST"])
 def save_diary():
     content = request.form["content"]
-    print(content)
     user = User.query.filter(User.id == session["user.id"]).one()
     day = date.today()
-    print(user)
 
     #status  update in users_chores
     db.session.add(DiaryLog(user = user, date = day, content = content))
     db.session.commit()
     rec = UserChore.query.filter(UserChore.user == user, 
                 UserChore.date==day, UserChore.chore_id==2).first()
-    print(type(rec))
     rec.status = "done"
     db.session.commit()
     #quering all user logs
     text = ""
     day = None
     logs = DiaryLog.query.filter(DiaryLog.user == user).order_by(DiaryLog.id).all()
-    print(logs)
     for log in logs:
         day = log.date
         text = text + "\n\n" + str(day) + "\n" +log.content 
         
-    print(text)
     drive_file_id =  user.drive_file
     drive_file_name = user.drive_name
     fh  = io.BytesIO(text.encode())
@@ -233,7 +217,6 @@ def save_diary():
     'name': drive_file_name, 
     'mimeType' : 'application/vnd.google-apps.document'
     }
-    print(service)
     updated_file = service.files().update(
         body=file_meta_data,
         #uploadType = 'media',
@@ -270,22 +253,11 @@ def update_chore():
     description = request.form.get("desc")
     min_age = request.form.get("age")
     is_man = ('true' == request.form.get("must"))
-    print("is_man value")
-    print("look for man")
-    print("look here")
-    print(is_man)
-    print(type(is_man))
     is_sim = ('true' == request.form.get("sim"))
-    print("look for sim")
-    print("is_sim value")
-    print(is_sim)
-    print(type(is_sim))
     often = request.form.get("often")
     chore =  Chore.query.filter(Chore.description == description).first()
     if chore:
-        print("chore exsist")
-        print(chore)
-        
+   
         chores = Chore.query.all()
         return render_template("all_chores.html", chores=chores)
     else:
@@ -294,7 +266,6 @@ def update_chore():
         db.session.add(chore)
         db.session.commit() 
         desc=chore.description
-        print("added to data base")
         return jsonify({'status': 'ok', "desc": desc})
 
 @app.route('/send')
@@ -303,9 +274,7 @@ def send_mail():
     subject = "{} balance".format(session["user.name"])
     message = create_message(sender= 'daureenn@gmail.com', to = 'daureenn@gmail.com', 
     subject=subject,  message_text=message_text)
-    print(message)
     send_message(service_gemail,'me', message)
-    print("sucess")
     user_message = UserMessage.query.filter(UserMessage.from_user_id == session["user.id"], UserMessage.status=='open').first()
     # If there is no open request add to DB 
     if not user_message:
@@ -326,7 +295,6 @@ def reedem_balance():
     neg_balance = -bal_rec[1]
     db.session.add(UserReward(user_id =user_id, reward=neg_balance,  date= date.today()))
     db.session.commit()
-    print("added a record to userreward")
     user_message_rec = UserMessage.query.filter(UserMessage.from_user_id == user_id, 
                     UserMessage.status=='open').one()
     user_message_rec.status='close'
@@ -334,9 +302,42 @@ def reedem_balance():
 
     return jsonify({'status': 'ok', 'mesid': mesid})
 
-
-
-
+@app.route('/admin-report', methods=["POST", "GET"])
+def expiriment():
+    colors = ["#8FD8D8", "#37FDFC", "#39B7CD", "#0D4F8B", "#191970", "#6959CD", "#9370DB", "#40e0d0"]
+    color_list = []
+    from_date =request.form["start"]
+    print(from_date)
+    to_date = request.form["finish"]
+    print(to_date)
+    users = User.query.filter(User.group=='kids').all()
+    dict_user = {}
+    i=0
+    for user in users:
+        rec_done = db.session.query(func.count(UserChore.id)).filter(UserChore.date>= from_date, 
+           UserChore.date<= to_date,  UserChore.user == user, UserChore.status == 'done').one()
+        count_done= rec_done[0]
+        rec_undone = db.session.query(func.count(UserChore.id)).filter(UserChore.date>= from_date, 
+           UserChore.date<= to_date, UserChore.user == user, UserChore.status != 'done').one()
+        count_undone= rec_undone[0]
+        color = colors[i]
+        i = +1
+        color_list.append(color)
+        print("this is colors")
+        print("this is colors")
+        print("this is colors")
+        print("this is colors")
+        print("this is colors")
+        print(colors)
+        if count_undone+count_done>0:
+            per_done = 100*(float(count_done)/(count_done+count_undone))
+            per_done = int(per_done)
+            dict_user[user] = per_done
+        else:
+            dict_user[user] = 0
+    labels = dict_user.keys()
+    values = dict_user.values()  
+    return render_template("report.html", values=values, labels=labels, color_list=color_list)
 
 
 

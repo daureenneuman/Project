@@ -16,8 +16,18 @@ this are your messages:
   
 </form>
 
+
+ <form id= "report" action='/admin-report' method="POST">
+    Chore Completion per Kid<br>
+    From date   <input type="date" name="start"  min="2018-01-01" ></input><br>
+    To date   <input type="date" name="finish" min="2018-01-01"></input><br>
+    <input type="submit" value="search"></input>
+</form>
+
+
 What do you want to do?
 <ul>
+   
   <li><a href='/admin-new-user'> Add/update user</a></li>
   <li><a href='/admin-chores'> Add/update chore</a></li>
   <li><a href='/admin- messages'> Show me my messages</a></li>
