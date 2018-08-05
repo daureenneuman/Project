@@ -2,13 +2,13 @@ html {
     margin-left: 150;
     margin-top: 100;
     font: 15px arial, sans-serif;
-
+    background-color: #ccf5ff;
 
 };
 
 body {
     margin-left: 150;
-    background-color: #727875;
+    background-color: #ccff33;
 }
 
 #login-page {
@@ -16,6 +16,31 @@ background:url('/static.images.png');
 
 }
 
+
+
+.input-lg {
+text-align:center; 
+font-size:25px; font-family: Helvetica;
+border-color:#f7ff00;
+border-width: medium;
+color:black;
+margin-top:1px;
+text-align: left;
+
+}
+
+/*font-family: 'MedievalSharp', cursive;
+font-family: 'Indie Flower', cursive;
+font-family: 'Lobster', cursive;
+font-family: 'Pacifico', cursive;
+font-family: 'Shadows Into Light', cursive;
+font-family: 'Dancing Script', cursive;
+font-family: 'Amatic SC', cursive;
+font-family: 'Poiret One', cursive;
+font-family: 'Monoton', cursive;
+font-family: 'Tangerine', cursive;
+font-family: 'Sacramento', cursive;
+font-family: 'Cabin Sketch', cursive;*/
    /* display: table;
 }
 div.add-text {

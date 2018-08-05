@@ -57,15 +57,13 @@ def login_process():
     user = User.query.filter(User.user_name == name, User.password==password).first()
     
     if user.is_admin:
-        session["user.id"] = user.id
         session["user.name"] = user.user_name
         session["admin"] = True
         messages = UserMessage.query.filter(UserMessage.status == 'open').all()
         return render_template('admin.html', user=user, messages=messages)
 
-    elif user:
+    elif user.group=='kids':
         session["user.id"] = user.id
-        flash("You are looged in")
         session["user.name"] = user.user_name
         return redirect('/user-chores') 
         
@@ -183,7 +181,7 @@ def hide_balance():
 
 @app.route("/user/diary")
 def show_diary_form():
-       
+    session["diary"] = True
     return render_template("diary.html")
 
 
@@ -224,7 +222,7 @@ def save_diary():
         #fields = fileID,
         media_body=media).execute()
 
-    
+    session.pop('diary', None)
     return redirect('/user-chores')
 
 @app.route('/report')
@@ -302,6 +300,18 @@ def reedem_balance():
 
     return jsonify({'status': 'ok', 'mesid': mesid})
 
+@app.route('/admin-today')
+def show_today_chorse():
+    sim_mans = UserChore.query.filter(UserChore.chore.has(is_mandatory=True, is_simultaneously=True),UserChore.date==date.today()).all()
+    turn_vols = UserChore.query.filter(UserChore.chore.has(is_mandatory =False, is_simultaneously=False), UserChore.date==date.today()).all()
+    turn_mans =  UserChore.query.filter(UserChore.chore.has(is_mandatory=True, is_simultaneously=False),UserChore.date==date.today()).all()
+    sim_vols =  UserChore.query.filter(UserChore.chore.has(is_mandatory=False, is_simultaneously=True),UserChore.date==date.today()).all()
+    
+    users = User.query.filter(User.group=='kids').order_by(User.age).all()
+
+    return render_template("todays_chores.html", sim_mans=sim_mans, turn_vols=turn_vols, turn_mans=turn_mans, sim_vols=sim_vols,users=users)
+
+
 @app.route('/admin-report', methods=["POST", "GET"])
 def expiriment():
     colors = ["#8FD8D8", "#37FDFC", "#39B7CD", "#0D4F8B", "#191970", "#6959CD", "#9370DB", "#40e0d0"]
@@ -323,21 +333,16 @@ def expiriment():
         color = colors[i]
         i = +1
         color_list.append(color)
-        print("this is colors")
-        print("this is colors")
-        print("this is colors")
-        print("this is colors")
-        print("this is colors")
-        print(colors)
+        
         if count_undone+count_done>0:
             per_done = 100*(float(count_done)/(count_done+count_undone))
             per_done = int(per_done)
-            dict_user[user] = per_done
+            dict_user[user.user_name] = per_done
         else:
             dict_user[user] = 0
     labels = dict_user.keys()
     values = dict_user.values()  
-    return render_template("report.html", values=values, labels=labels, color_list=color_list)
+    return render_template("report.html", values=values, labels=labels, colors=colors)
 
 
 
@@ -346,11 +351,11 @@ if __name__ == "__main__":
     # that we invoke the DebugToolbarExtension
 
     # Do not debug for demo
-    app.debug = True
+    # app.debug = True
 
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

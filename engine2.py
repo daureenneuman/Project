@@ -41,19 +41,21 @@ def assign_man_sim(chore_dictionary):
 
 
 def assign_vol_sim(chore_dictionary):
-   for chore in chore_dictionary:
-        print(chore)
+    print("this is chore_dictionary dictionary")
+    print(chore_dictionary)
+    for chore in chore_dictionary:
+
         users = User.query.filter(User.age>= chore.min_age, 
                             User.group=='kids').order_by(User.age).all()
-        chores_count = 0
-        while chores_count <=2:
-            for user in users: 
-                db.session.add(UserChore(user=user, chore=chore, 
-                                            date=day, status='suggested')) 
-                db.session.commit()
-                chores_count+=1   
-         
-        continue
+        
+        for user in users: 
+            print("this is adding to db")
+            print(user, chore)
+            db.session.add(UserChore(user=user, chore=chore, 
+                                        date=day, status='suggested')) 
+            db.session.commit()
+           
+        
 #   :
 # every kids is suggested ro earn reward by completing his least favorite chore and most favorite chore
 def assign_vol_turn(child_dictionary):

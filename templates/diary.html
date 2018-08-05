@@ -1,15 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2> My diary </h2>
-<textarea id="textextra" form ="diary" class="text" cols="86" rows ="20" name="content" placeholder="Tell your diary how is your day going? Your text will be saved with today's date"   ></textarea>
 
-<form id="diary" action='/save-diary' method="POST">
-   
-     <input id="save" type="submit" value="Save" style="width:100px; margin-left: 650px;"</input>
+<div class="container" style="background-color:#535959; width:55%; border-radius: 25px; box-shadow: 5px 10px 8px;">
+    <div class="row"> 
+        <div class="col-12">
+            <div style="text-align:center; color:#f7ff00; font-size:45px; text-align:center; font-family: Helvetica; ">
+            Dear Diary, 
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding:10px; text-align:center">
+        <form id="diary" action='/save-diary' method="POST">
+            <textarea id="textextra" form ="diary" class="text" cols="86" rows ="18" name="content" placeholder="Tell your diary how is your day going? Your text will be saved with today's date"   style="font-size:18px; background-color:#ffffe0"></textarea>
+            
+            <input id="diary-submit" class="btn btn-outline-primary btn-lg" type="submit" value="Save" style="border:solid; border-color:#f7ff00; color:white; font-size:25px; width:150px; float: center; height:50px; margin-top:25px;"></input>
+        </form>
 
-</form>
-
-
+    </div>
+</div> 
 {% endblock %}
 
  

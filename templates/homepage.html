@@ -1,20 +1,30 @@
+
 {% extends 'base.html' %}
 {% block content %}
 
+<div class="container" style="width:55%; border-radius: 25px; box-shadow: 5px 10px 8px;">
 <br>
-<div id="login-page" class="container" > 
+<div id="login-page" class="container" style="background-color:#535959; border-radius: 25px;box-shadow: 5px 10px 8px; padding:100px; width: 90%; height:80%; "> 
     <div class="row"> 
-<div class="col-5">
-<form id= "login" class="form-group"action='/process_login' method="POST" style="width:40%">
- Name:  <input class="form-control input-lg" type="text" name="name" required></input>
- Password <input class="form-control input-lg" type="text" name="password" required></input>
+        <div class="col-12">
+            <div style="text-align:center; color:#f7ff00; font-size:45px; text-align:center; font-family: Helvetica; ">
+            PLease Login
+            </div>
+        </div>
+    </div>
+    <div class="row"> 
+        <div class="col-12">
+            <form id= "login" class="form-group"action='/process_login' method="POST" style="width:40%; color:white; font-size:25px; font-family: Helvetica">
+                <label>Name:</label>
+                 <input class="form-control input-lg" type="text" name="name" required></input>
+                <label style="margin-top:15px">Password</label>
+                 <input class="form-control input-lg" type="text" name="password" required></input>
+                  <input id="login-submit" class="btn btn-outline-primary btn-lg" type="submit" style="border:solid; border-color:#f7ff00; color:white; font-size:25px; width:150px; float: left; height:60px; margin-top:25px;"></input>
+            </form>
+        </div>
+    </div>
+</div>
 <br>
-<input class="btn btn-outline-primary btn-lg" type="submit"></input>
-</form>
-</div>
-<div class="col-7">
- <img src="/static/pic2.jpg" width="800" height="400">
-</div>
-</div>
 </div>
 {% endblock %}
+

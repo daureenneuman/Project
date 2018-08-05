@@ -3,98 +3,83 @@
 
 
 
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-       <h2 id="man_chores">Hi {{ user.user_name}} </h2>
-   </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            {% if userchores_mans %} 
-        <h2 id="manchores">These are your chores for today</h2>
-         {% else %}
-    <h2 id="manchores">Great job today </h2>
-    {% endif %}
-    </div>
-    </div>
-<form id= "status" action='/process-chores' method="POST">
-    {% for userchore_man in userchores_mans %}
-    <div id="{{userchore_man.chore_id}}" class="row">
-    <div class="col-6" >
-        <li  style="list-style-type:none"> 
-                {{ userchore_man.chore.description }} 
-            </div>
+<div class="container" style="background-color:#535959; border-radius: 25px;box-shadow: 5px 10px 8px #888888; padding:50px; height: 100%;margin-top:20px">
+     <div class="spacer" style="clear: both">
+    <div class="row" style="margin:10px; width:90%">
+             <!-- row 1 starts -->
+        <div class="col-12" style="text-align:center">
+            <h2 id="man_chores" style="text-align:center; font-size:75px; font-family: Lobster; color:#f7ff00">Hi {{ user.user_name}} </h2>
+        </div>
+    </div> <!-- row 1 ends -->
+    
+    <div class="row" style="min-height:250px"> <!-- row 2 starts -->
+    <!-- <form id= "status" action='/process-chores' method="POST"> -->
     <div class="col-6">
-        <button class ="man saverbutton" data-choreid= "{{userchore_man.chore_id}}"  
-        value="done" style="backgroung:blue">done</button> 
-                  
-        </li>
+        {% if userchores_mans %} 
+                <h2 id="manchores" style="font-family:Shadows Into Light; font-size: 40px; color:#f7ff00    ; font-weight: bold;">Must do chores</h2>
+            {% else %}
+            <h2 id="manchores" style="font-family:Shadows Into Light; font-size: 40px; color:#f7ff00; font-weight: bold; text-align:center">Great job today </h2>
+        {% endif %}
+        {% for userchore_man in userchores_mans %}
+        <div id="{{userchore_man.chore_id}}" class="row">
+            <div class="col-9" >
+                <li  style="list-style-type:none; font-size:30px; font-family: 'Indie Flower', cursive; font-weight: bold; color:#ffffff"> 
+                {{ userchore_man.chore.description }} 
+                </li>
+            </div>
+            <div class="col-3">
+                <button class ="man saverbutton btn btn-outline-light" data-choreid= "{{userchore_man.chore_id}}" value="done" style="backgroung:blue; margin-top:1px font-size:35px">&#x1f44d</button> 
+            </div>
+        </div>
+        {% endfor %}
     </div>
-</div>
-    {% endfor %}
 
-
-{% if userchores_vols %}    
-<h2 id="volchores"> You can get rewards for this chores</h2>
-    {% for userchore_vol in userchores_vols %}
-    <div id="{{userchore_vol.chore_id}}" class="row">
-    <div class="col-6" >
-        <li style="list-style-type:none"> 
-       
+    <div class="col-6">
+        {% if userchores_vols %}    
+        <h2 id="volchores" style="font-family:Shadows Into Light; font-size: 40px; color:#f7ff00; font-weight: bold"> Chores for rewards</h2>
+        {% for userchore_vol in userchores_vols %}
+        <div id="{{userchore_vol.chore_id}}" class="row">
+            <div class="col-8" >
+                <li style="list-style-type:none; font-size:30px; font-family: 'Indie Flower', cursive; font-weight: bold; color:#ffffff">      
                 {{ userchore_vol.chore.description }} :{{userchore_vol.chore.reward}}$
-         </div>    
-       <div class="col-6" >
-            <button class ="vol saverbutton" data-choreid= "{{userchore_vol.chore_id}}" 
-                    data-reward="{{userchore_vol.chore.reward }}"  value="done" >done</button> 
-                    
-        </li>
+                </li>
+            </div>    
+            <div class="col-4" >
+                <button class ="vol saverbutton btn btn-outline-light" data-choreid= "{{userchore_vol.chore_id}}" data-reward="{{userchore_vol.chore.reward }}"  value="done" >&#x1f44d</button>
+            </div>
+        </div>
+      {% endfor %}
+        {% endif %}
     </div>
-</div>
+</div> <!-- row 2 ends -->
 
-{% endfor %}
-{% else %}
+<div class="row">
+        <!-- <div class="col-12"> -->
+        
+        <!-- </div> -->
+        
+       
+        <div id="user-balance" class="col-12" style="text-align:center">
+            <!-- <div class="col-12"> -->
+            <h4 style="font-family:Shadows Into Light; font-size: 40px; color:#f7ff00; font-weight: bold;">Your balnace is: <b id="show_balnace" style="font-family:Shadows Into Light; 
+                font-size: 55px; color:white; font-weight: bold;"> {{ session["balance"] }}</b> dollars!
+            <button id="redeem" type="button" class="btn btn-primary" style="color:white; font-size:25px; border:solid; background-color:#0074D9"> Reedem</button> 
+            </h4>
+            <!-- </div> -->
+        </div>
+        <h3 id="after_send" style="font-family:Shadows Into Light; font-size: 40px; color:yellow; font-weight: bold;"></h3>
+       
+        <br>
+</div> <!-- row 3 ends -->
 
-{% endif %}
+   </div>
+</div> <!-- container ends -->
 
-   </form>
-<div class="row"> 
-    <div class="col-12">
-{% if userchore_diary %}
-  <div class="row">
-    <div class="col-12">
-    <li id="diary" style="list-style-type:none">  
-        <a href= "/user/diary" >Write in my diary</a>
-    </li>   
-    </div>
-</div>
- {% endif %}
-</div>
-</div>
-
-{% if "balance" in session %}
-<div id="user-balance" class="row">
-    <div class="col-12">
-
-<h4  >Your balnace is: <b id="show_balnace"> {{ session["balance"] }}</b> 
-    dollars! <button id="redeem" type="button" class="btn btn-light" style="color:blue"> Reedem</button> 
-</h4>
-</div>
-</div>
-<h3 id="after_send"></h3>
- {% else %}
- <a href='/show-balance'> Show me my balnace</a>
- {% endif %}
- <br>
-
-
-</div>
-</div>
 <script>
 function showsendResults(results) {
         console.log(results.status);
             if (results.status==='ok') {
-                $("#after_send").html("A request to reedem your balance was sent to mom");
+                $("#after_send").html("A request to reedem your balance was sent to parents");
             
             };
 }

@@ -1,44 +1,45 @@
 
-<!DOCTYPE html><html lang="en"><head>   <meta charset="utf-8" />   <title>Chart.js </title>      <!-- import plugin script -->   <head> <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>  </head><body>
-<h1>Flask Chart.js</h1><!-- bar chart canvas element --><canvas id="chart" width="600" height="400"></canvas>
+{% extends 'base.html' %}
+{% block content %}
 
-
-
+<div class="container" style="background-color:#535959; border-radius: 25px;box-shadow: 5px 10px 8px      #888888; padding:50px; height: 100%;margin-top:20px">
+  <div class="row" style="text-align:center; margin-top:40px">
+  
+<h1 style="text-align:center; color:white">Chores Statuses</h1><!-- bar chart canvas element -->
+<div id="chartContainer">
+ <canvas id="chart" width="400" height="400"></canvas>
+ </div>
+</div>
+</div>
 <script>
-   // bar chart data
-   var barData = {
-   labels : [{% for item in labels %}
-                  "{{item.user_name}}",
-              {% endfor %}],
-   datasets : [
-      {
-            fillColor: '#40e0d0',
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-         data : [{% for item in values %}
-                      {{item}},
-                    {% endfor %}]
-      }
-      ]
-   }
- 
-   // get bar chart canvas
-   var mychart = document.getElementById("chart").getContext("2d");
-    console.log(Chart);
-   steps = 0.5;
-   max = 100;
-   // draw bar chart
-   let mychart2 = new Chart(mychart).Bar(barData, {
-        scaleOverride: true,
-        scaleSteps: steps,
-        scaleStepWidth: Math.ceil(max / steps),
-        scaleStartValue: 0,
-        scaleShowVerticalLines: true,
-        scaleShowGridLines : true,
-        barShowStroke : true,
-        scaleShowLabels: true
-   });
- console.log(mychart2);
-</script>
-</body></html>
+var mychart = document.getElementById("chart").getContext("2d");
 
+new Chart(mychart, {
+   type: 'bar',
+   data: {
+      labels: [{% for item in labels %}
+                    "{{item}}",
+               {% endfor %}],
+      datasets: [{
+         data: [{% for item in values %}
+                    {{item}}, 
+                {% endfor %}],
+         backgroundColor: 'yellow',
+         borderColor: 'rgba(151,187,205,1)',
+         pointBackgroundColor: 'rgba(151,187,205,1)'
+      }]
+   },
+   options: {
+      scales: {
+         yAxes: [{
+            ticks: {
+               beginAtZero: true,
+               stepSize: 1
+            }
+         }]
+      }
+   }
+});
+          
+</script>
+{% endblock %}

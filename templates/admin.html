@@ -1,51 +1,123 @@
 {% extends 'base.html' %}
 {% block content %}
 
-Hi {{user.user_name}}
-this are your messages:
- <form id= "mes-status" action='/process-payment' method="POST">
-    {% for message in messages %}
-    
-        <li id="{{message.id}}" style="list-style-type:none"> 
+<div class="container" style="background-color:#535959; width:90%; border-radius: 25px; box-shadow: 5px 10px 8px;">
+    <div class="row" style="margin:10px; width:90%">
+        <div class="col-12" style="text-align:center">>
+            <h2 style="align-text:center; color:#f7ff00; font-size:45px; text-align:center; 
+            font-family:   Helvetica; "> Admin </h2>
+        </div>
+    </div>
+    <div class="row" style="margin-left:70px">
+        <div class="col-6">
+          
+            <h3 style="color:white; text-align:left; font-size:35px">Messages:</h3>
+            
+           
                 
-        <button  class ="mes" data-mesid= "{{message.id}}" value="done" style="background:blue">pay</button> 
-                  {{ message.message }} 
-        </li>
+                {% for message in messages %}
+                <div id="{{message.id}}" class="row">
+                <div class="col-4">
+                    <li  style="list-style-type:none; font-size:22px; font-family: Helvetica; color:white">{{ message.message }} 
+                    </li>
+                </div>
+                <div class="col-2">
+                    <button class ="mes btn btn-outline-primary btn-lg" data-mesid= "{{message.id}}" value="done" style="border:solid; border-color:#f7ff00; color:white; font-size:18px">Paid</button>
+                </div>
+            </div>
+                {% endfor %}
+      
+        </div>
+    
 
-    {% endfor %}
+        <div class="col-6">
+            
+            
+
+                 
+                <form id= "report" action='/admin-report' method="POST">
+                    <div class="col-12">
+                    <h3 style="color:white; text-align:left; font-size:35px">Status Report:</h3>
+                </div>
+                    <div class="col-8" style="color:white; font-size:22px">
+                         From date 
+                    </div>
+                    <div class="col-4">
+                        <input class="input-form-control" type="date" name="start"  min="2018-01-01" style="color:black; font-size:18px; font-family: Helvetica"></input>
+                    </div>
+                    <div class="col-8" style="color:white; font-size:22px">
+                        End date 
+                    </div>
+                    
+                    <div class="col-4 input-group date">
+                            <input class="input-form-control" type="date" name="finish"  min="2018-01-01" style="color:black; font-size:18px; font-family: Helvetica"></input>
+                    </div>
+                    <div class="col-12">
+                        <input class="btn btn-outline-primary btn-lg" type="submit" value="search"
+                        style="border:solid; border-color:#f7ff00; margin-top:15px;margin-bottom:15px; color:white; font-size:18px"></input>
+                    </div>
+                    </div>
+                </form>
+        </div>
+       
+    </div>
+
+</div>
+       
   
-</form>
 
+<!-- <div class="row">
+    <div class="col-12">
+        <form id= "report" action='/admin-report' method="POST">
+            <div class="col-12">
+                Chore Completion per Kid
+            </div>
+            <div class="col-12">
+                From date   
+            </div>
+            <div class="col-12">
+                <input type="date" name="start"  min="2018-01-01" ></input>
+            </div>
+             <div class="col-12">
+                    To date  
+            </div>
+            <div class="col-12">
+                 <input type="date" name="finish" min="2018-01-01"></input>
+            </div>
+            <div class="col-12">
+            <input type="submit" value="search"></input>
+            </div>
+        </form>
 
- <form id= "report" action='/admin-report' method="POST">
-    Chore Completion per Kid<br>
-    From date   <input type="date" name="start"  min="2018-01-01" ></input><br>
-    To date   <input type="date" name="finish" min="2018-01-01"></input><br>
-    <input type="submit" value="search"></input>
-</form>
+    </div>
+</div>
+</div> -->
 
-
-What do you want to do?
+<!-- What do you want to do?
+</div>
 <ul>
    
   <li><a href='/admin-new-user'> Add/update user</a></li>
   <li><a href='/admin-chores'> Add/update chore</a></li>
   <li><a href='/admin- messages'> Show me my messages</a></li>
-</ul>  
+</ul>   -->
 
-
+</div>
 
  <script type="text/javascript">
    
         function showUpdateMessage(results) {
             if (results.status==='ok') {
+                console.log(results);
                 let mesid = results.mesid;
+                console.log(mesid);
                 let item = document.getElementById(mesid);
                 console.log(item.status);
                 // item.prop( "disabled", true );
                 item.remove();
             };
-            
+           
+
         }
 function UpdateMes(evt) {
     event.preventDefault()
@@ -64,10 +136,14 @@ function UpdateMes(evt) {
     }
     $(".mes").on("click", UpdateMes);
     
+
+
+
+
+
+
+
 </script>
-
-
-
 
 
 
