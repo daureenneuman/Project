@@ -1,19 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container" style="background-color:#535959; width:55%; border-radius: 25px; box-shadow: 5px 10px 8px;">
+<div class="container" style="background-color:#535959; width:60%; border-radius: 25px; box-shadow: 5px 10px 8px;">
+    
     <div class="row"> 
         <div class="col-12">
             <div style="text-align:center; color:#f7ff00; font-size:45px; text-align:center; font-family: Helvetica; ">
-            Dear Diary, 
+            Diary
             </div>
         </div>
     </div>
-    <div class="row" style="padding:10px; text-align:center">
-        <form id="diary" action='/save-diary' method="POST">
-            <textarea id="textextra" form ="diary" class="text" cols="86" rows ="18" name="content" placeholder="Tell your diary how is your day going? Your text will be saved with today's date"   style="font-size:18px; background-color:#ffffe0"></textarea>
-            
+    <div class="row" style="padding:10px; text-align:center; margin-left:50px">
+       
+
+        <form id="diary" action='/save-diary' method="POST" style="text-align:center">
+            <div class="col-12">
+            <textarea id="textextra" form ="diary" class="text" wrap="off" cols="85" rows ="15" name="content" placeholder="Dear diary, "   style="font-size:18px; background-color:#ffffe0; 
+            text-align:center overflow: auto;"></textarea>
+            </div>
+             <div class="col-12">
             <input id="diary-submit" class="btn btn-outline-primary btn-lg" type="submit" value="Save" style="border:solid; border-color:#f7ff00; color:white; font-size:25px; width:150px; float: center; height:50px; margin-top:25px;"></input>
+            </div>
+     
         </form>
 
     </div>

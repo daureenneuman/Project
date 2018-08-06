@@ -59,8 +59,7 @@ def login_process():
     if user.is_admin:
         session["user.name"] = user.user_name
         session["admin"] = True
-        messages = UserMessage.query.filter(UserMessage.status == 'open').all()
-        return render_template('admin.html', user=user, messages=messages)
+        return redirect("/admin")
 
     elif user.group=='kids':
         session["user.id"] = user.id
@@ -70,6 +69,17 @@ def login_process():
     else:
         flash("Wrong name or password Please try again")
         return redirect("/")
+
+@app.route("/admin")
+def show_admin_page():
+    messages = UserMessage.query.filter(UserMessage.status == 'open').all()
+    from_date = date.today() 
+    to_date = date.today() 
+
+    return render_template('admin.html', messages=messages,
+                    from_date=from_date, to_date=to_date)
+
+
 
 
 @app.route('/user-chores')
@@ -182,8 +192,8 @@ def hide_balance():
 @app.route("/user/diary")
 def show_diary_form():
     session["diary"] = True
+    
     return render_template("diary.html")
-
 
 
 @app.route('/save-diary', methods=["POST"])
@@ -225,11 +235,7 @@ def save_diary():
     session.pop('diary', None)
     return redirect('/user-chores')
 
-@app.route('/report')
-def updatechore():
 
-
-    return render_template("update_chore.html")
     
 
 
@@ -356,6 +362,6 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

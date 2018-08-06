@@ -11,17 +11,24 @@
     <div class="row" style="margin-left:70px">
         <div class="col-6">
           
-            <h3 style="color:white; text-align:left; font-size:35px">Messages:</h3>
-            
+            {% if messages %} 
+               <h3 style="color:white; text-align:left; font-size:35px">Messages:</h3>
+            {% else %}
+          
+             <h3 id="no_messages" style="color:white; text-align:left; font-size:35px">No Messages</h3>
+            {% endif %}
            
-                
+            <h4> </h4>
+            
+            
+              
                 {% for message in messages %}
                 <div id="{{message.id}}" class="row">
-                <div class="col-4">
+                <div class="col-5">
                     <li  style="list-style-type:none; font-size:22px; font-family: Helvetica; color:white">{{ message.message }} 
                     </li>
                 </div>
-                <div class="col-2">
+                <div class="col-7">
                     <button class ="mes btn btn-outline-primary btn-lg" data-mesid= "{{message.id}}" value="done" style="border:solid; border-color:#f7ff00; color:white; font-size:18px">Paid</button>
                 </div>
             </div>
@@ -43,14 +50,16 @@
                          From date 
                     </div>
                     <div class="col-4">
-                        <input class="input-form-control" type="date" name="start"  min="2018-01-01" style="color:black; font-size:18px; font-family: Helvetica"></input>
+                        <input class="input-form-control" type="date" name="start"  value="{{from_date}}" 
+                        placeholder="{{from_date}}" min="2018-01-01" style="color:black; font-size:18px; font-family: Helvetica"></input>
                     </div>
                     <div class="col-8" style="color:white; font-size:22px">
                         End date 
                     </div>
                     
                     <div class="col-4 input-group date">
-                            <input class="input-form-control" type="date" name="finish"  min="2018-01-01" style="color:black; font-size:18px; font-family: Helvetica"></input>
+                            <input class="input-form-control" type="date" name="finish" value="{{to_date}}" 
+                            placeholder="{{to_date}}" min="2018-01-01" style="color:black; font-size:18px; font-family: Helvetica"></input>
                     </div>
                     <div class="col-12">
                         <input class="btn btn-outline-primary btn-lg" type="submit" value="search"

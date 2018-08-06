@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Cabin+Sketch|Dancing+Script|Indie+Flower|Lobster|MedievalSharp|Monoton|Pacifico|Poiret+One|Sacramento|Oswald|Shadows+Into+Light|Tangerine" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script> 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script>
+ 
 </head>
 <body style="background-color:black">
 <nav class="navbar navbar-expand-lg bg-dark" style="text-align: left">
@@ -28,8 +28,9 @@
         {%if "admin" in session %}
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active"><a class="nav-link" href="/logout">Logout</a></li>
+          <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
           <li class="nav-item"><a class="nav-link" href="/admin-today">Assignments</a></li>
-          <li class="nav-item"><a class="nav-link" href="/admin-report">Status</a></li>
+          
       </ul>
         {% endif %}
   

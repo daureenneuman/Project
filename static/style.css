@@ -16,11 +16,19 @@ background:url('/static.images.png');
 
 }
 
+.legend { list-style: none; padding-left:5px;}
+.legend li { float: left; margin-right: 10px; font-size:20px; color:white; margin-left:10px;}
+.legend span { border: 1px solid #ccc; float: left; width: 40px; height: 20px; margin-left: 10px; }
+/* your colors */
+.legend .pm { background-color: red; }
+.legend .gm { background-color:#ffbb33; }
+.legend .gr { background-color: #32cd32; }
+.legend .pr { background-color: blue; }
 
 
-.input-lg {
+.login-input {
 text-align:center; 
-font-size:25px; font-family: Helvetica;
+font-size:17px; font-family: Helvetica;
 border-color:#f7ff00;
 border-width: medium;
 color:black;

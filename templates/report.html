@@ -5,7 +5,7 @@
 <div class="container" style="background-color:#535959; border-radius: 25px;box-shadow: 5px 10px 8px      #888888; padding:50px; height: 100%;margin-top:20px">
   <div class="row" style="text-align:center; margin-top:40px">
   
-<h1 style="text-align:center; color:white">Chores Statuses</h1><!-- bar chart canvas element -->
+<h1 style="text-align:center; color:white">Done Chores</h1><!-- bar chart canvas element -->
 <div id="chartContainer">
  <canvas id="chart" width="400" height="400"></canvas>
  </div>
@@ -20,7 +20,9 @@ new Chart(mychart, {
       labels: [{% for item in labels %}
                     "{{item}}",
                {% endfor %}],
+
       datasets: [{
+        label: 'Percent',
          data: [{% for item in values %}
                     {{item}}, 
                 {% endfor %}],
@@ -30,13 +32,27 @@ new Chart(mychart, {
       }]
    },
    options: {
+      legend: {
+        labels: {
+          fontColor: 'white',
+          fontSize:18
+        }
+      },
       scales: {
          yAxes: [{
             ticks: {
                beginAtZero: true,
-               stepSize: 1
+               stepSize: 10,
+               fontColor: 'white',
+               fontSize:15
             }
-         }]
+         }],
+         xAxes: [{
+            ticks: {
+              fontColor: 'white',
+              fontSize:20
+            }
+          }],
       }
    }
 });
