@@ -236,22 +236,18 @@ def save_diary():
     return redirect('/user-chores')
 
 
-    
 
-
-@app.route('/admin-chores')
+@app.route('/add/chores')
 def show_chores():
-    if "user.id" in session:
-        if "admin" in session:
-            chores = Chore.query.all()
-            return render_template("all_chores.html", chores=chores)
-        else:
-            flash("You are not authorized to access admin pages")
-            return redirect('/user-chores')
+    if "admin" in session:
+        mans = Chore.query.filter(Chore.is_mandatory ==True).all()
+        vols = Chore.query.filter(Chore.is_mandatory ==False).all()
+       
+        return render_template("all_chores.html", mans=mans, vols=vols)
     else:
-        flash("Please login")
-        return redirect ("/")
-
+        flash("You are not authorized to access admin pages")
+        return redirect('/')
+   
 @app.route('/admin-new-chore', methods=["POST"])
 def update_chore():
     description = request.form.get("desc")
@@ -357,11 +353,11 @@ if __name__ == "__main__":
     # that we invoke the DebugToolbarExtension
 
     # Do not debug for demo
-    # app.debug = True
+    app.debug = True
 
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

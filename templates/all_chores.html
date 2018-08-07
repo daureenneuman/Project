@@ -1,88 +1,91 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container-fluid" style="background-color:#535959; width:90%; border-radius: 25px; box-shadow: 5px 10px 8px;">
-<div class="row">
+<div class="container-fluid" style="background-color:#535959; width:90%; border-radius: 25px; box-shadow: 5px 10px 8px; margin-left:10">
+    <div class="row"> 
+
+        <div class="col-12">
+            <div style="text-align:center; color:#f7ff00; font-size:60px; text-align:center; 
+            font-family:   Helvetica; ">
+            Chores 
+            </div>
+        </div>
+    </div>
+    <br>
+     <div class="row" style="padding-left:150px; padding-right:100px">
+
+       <ul class="col-4" style="color:#ececec; list-style-type:none; font-size: 30px; text-align:left">
+        Mandatory Chores
+               
+            {% for man in mans %}
+          <li style="color:red; font-size:25px; margin-top5px">
+              {{man.description}}
+          </li>
+           {% endfor %}
+        </ul>
+      <ul class="col-4" style="color:#ececec; list-style-type:none; font-size: 30px; text-align:left">
+           Voluntary Chores
+          
+            {% for vol in vols %}
+          <li style="color:#32cd32; font-size:25px; margin-top5px">
+              {{vol.description}}, {{vol.reward}}$
+          </li>
+           {% endfor %}
+      </ul>
+     
 <div class="col-4">
-<h4 id="mes-add" class="title"></h4> 
-<button id="add" class="btn btn-outline-secondary btn-lg" >Add chore</button>
-<form id= "addchore" class="form-horizontal" action='/admin-new-chore' method="POST" style="display:none">
+   <h4 id="mes-add" class="title" style="color:white; font-size:30px; font-family:Shadows Into Light"></h4> 
+<button id="add" class="btn btn-outline-secondary btn-md" style="padding: 5px 60px; border-color:#ffd700; color:white" >Add chore</button>
+<form id= "addchore" class="form-horizontal" action='/admin-new-chore' method="POST" 
+style="display:none; font-size:20px; color:#ffd700">
   
-    <label class="control-label col-sm-4" for="desc">Description: </label>
+    <label class="control-label col-sm-4" style="color:white" for="desc">Description: </label>
   <div class="col-10" style="width: 400px">
-    <input type="text" name="desc" id="desc" required> </input>
+    <input type="text" name="desc" id="desc"  required> </input>
   </div>
  
-    <label class="control-label col-sm-8" for="age">Minimum age?  </label>
+    <label class="control-label col-sm-8" style="color:white" for="age">Minimum age?  </label>
     <div class="col-sm-4">
     <input type="number" name="age" id="age" required>
     </div>
 
 <div id="must" class="add-radio form-group">
-    <label class="control-label col-sm-4" for="must">Must? </label>
+    <label class="control-label col-sm-4"  style="color:white"for="must">Must? </label>
     <div class="col-sm-10">
-    Yes <input type="radio" name="must"  value="true" required></input>
-    No <input type="radio" name="must"  value="false" required></input>
+    <a style="color:red"> Yes <input type="radio" name="must"  value="true" required></input></a>
+    <a style="color:#32cd32"> No <input type="radio" name="must"  value="false" required></input>
     </div>
 </div>
 <div id="sim" class="add-radio form-group">
-    <label class="control-label col-sm-4" for="sim">Simultaneously? </label>
+    <label class="control-label col-sm-4"  style="color:white" for="sim">Simultaneously? </label>
     <div class="col-sm-10">
-    Yes <input type="radio" name="sim"  value="true" required></input>
-    No <input type="radio" name="sim"  value="false" required></input>
+    <a >Yes <input type="radio" name="sim"  value="true" required></input></a>
+    <a > No <input type="radio" name="sim"  value="false" required></input></a>
     </div>
 
 </div>
 <div id="often" class="add-radio form-group">
-    <label class="control-label col-sm-4" for="often">Frequency? </label>
-    <div class="col-sm-10">
+    <label class="control-label col-sm-4" style="color:white" for="often">Frequency? </label>
+    <div class="col-sm-10" style="color:#ffd700">
     daily <input type="radio" name="often" value="daily" required></input>
     weekly <input type="radio" name="often" value="weekly" required></input>
     biweekly <input type="radio" name="often" value="by_weekly"required></input>
     </div>
 </div>
-<div id="often" class="add-radio form-group" style="text-align:left">
+<div id="often" class="add-radio form-group" style="text-align:left ">
     <label class="control-label col-sm-4" for="often"> </label>
     <div class="col-sm-10">
-    <button class="btn btn-outline-secondary btn-lg" id="submit-add" type="submit" style="padding: 5px 60px">Save</button><br>
+    <button class="btn btn-outline-secondary btn-lg" id="submit-add" type="submit" 
+    style="padding: 5px 60px; border-color:#ffd700; color:white">Save</button><br>
     </div>
 </div>
 <div>
 </div>
 </form>
-<br>
-</div>
+<br> 
+</div> 
 
-<div class="col-4" >
-<table  style= "font-family: arial, sans-serif; border-collapse: collapse; width: 100%">
-  <h3 >Reward chores</h3>
-  {% for chore in chores %}
-  <tr >
-
-   {% if chore.reward  %}
-   <th style="font-weight: normal">{{ chore.description}}, {{chore.reward}}$</th>
-   
-   {% endif %}
-   </tr>
-  {% endfor %}
-</table>
 </div>
-
-<div class="col-4">
-<table  style= "font-family: arial, sans-serif; border-collapse: collapse; width: 100%" >
-<h3>Must chores</h3>
-  {% for chore in chores %}
-  {% if not chore.reward  %}
-  <th style="font-weight: normal">{{ chore.description}}</th>
-   {% endif %}
-   </tr>
-  {% endfor %}
-
-</table>
-</div>
-</div>
-</div>
-
 <!-- add chore to db -->
 <script type="text/javascript">
    "use strict";
