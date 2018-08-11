@@ -2,77 +2,77 @@
 {% block content %}
 
 
-<div class="container-fluid" style="background-color:#535959; width:90%; border-radius: 25px; box-shadow: 5px 10px 8px;">
-    <div class="row"> 
+    <div class="container-fluid" style="background-color:#535959; width:90%; border-radius: 25px; box-shadow: 5px 10px 8px;">
+        <div class="row"> 
 
-        <div class="col-12">
-            <div style="text-align:center; color:white; font-size:45px; text-align:center; 
-            font-family:   Helvetica; ">
-            Assignments 
+            <div class="col-12">
+                <div style="text-align:center; color:white; font-size:45px; text-align:center; 
+                font-family:   Helvetica; ">
+                Assignments 
+                </div>
             </div>
         </div>
-    </div>
-    <br>
-     <div class="row">
-        {% for user in users %}
-        <ul class="col-3" style="color:#ececec; list-style-type:none; font-size: 30px; text-align:left">{{user.user_name}}, 
-            <b style="font-size:30px"> {{user.age}} </b><br>
+        <br>
+         <div class="row">
+            {% for user in users %}
+            <ul class="col-3" style="color:#ececec; list-style-type:none; font-size: 30px; text-align:left">{{user.user_name}}, 
+                <b style="font-size:30px"> {{user.age}} </b><br>
 
-            {% for sim_man in sim_mans %}
-               
-                {% if sim_man.user_id == user.id  %}
-
-                
-                <li style="color:red; font-size:25px; margin-top5px">
-                        {{sim_man.chore.description}}
-                </li>
-
-               {% endif %}
-            {% endfor %}
-          
-             {% for turn_man in turn_mans %}
-
-                {% if turn_man.user_id == user.id  %}
-
-                
-                <li style="color:#ffbb33; font-size:25px; margin-top5px">
-                        {{turn_man.chore.description}}
-                </li>
-
-               {% endif %}
-            {% endfor %}
+                {% for sim_man in sim_mans %}
                    
-            {% for turn_vol in turn_vols %}
+                    {% if sim_man.user_id == user.id  %}
 
-                {% if turn_vol.user_id == user.id  %}
+                    
+                    <li style="color: #ff8566; font-size:25px; margin-top5px">
+                            {{sim_man.chore.description}}
+                    </li>
 
+                   {% endif %}
+                {% endfor %}
+              
+                 {% for turn_man in turn_mans %}
+
+                    {% if turn_man.user_id == user.id  %}
+
+                    
+                    <li style="color:#ffffb3; font-size:25px; margin-top5px">
+                            {{turn_man.chore.description}}
+                    </li>
+
+                   {% endif %}
+                {% endfor %}
+                       
+                {% for turn_vol in turn_vols %}
+
+                    {% if turn_vol.user_id == user.id  %}
+
+                    
+                    <li style="color: #99ff99 ; font-size:25px; margin-top5px">
+                            {{turn_vol.chore.description}}, {{turn_vol.chore.reward}}$
+                    </li>
+
+                   {% endif %}
+                {% endfor %}
                 
-                <li style="color: #32cd32 ; font-size:25px; margin-top5px">
-                        {{turn_vol.chore.description}}, {{turn_vol.chore.reward}}$
-                </li>
-
-               {% endif %}
-            {% endfor %}
-            
-           
-            
-                {% for sim_vol in sim_vols %}
-
-                {% if sim_vol.user_id == user.id  %}
-
+               
                 
-                <li style="color:blue; font-size:25px; margin-top5px">
-                        {{sim_vol.chore.description}}, {{sim_vol.chore.reward}}$
-                </li>
+                    {% for sim_vol in sim_vols %}
 
-               {% endif %}
-            {% endfor %}
+                    {% if sim_vol.user_id == user.id  %}
 
-             </ul>
+                    
+                    <li style="color:#b3daff; font-size:25px; margin-top5px">
+                            {{sim_vol.chore.description}}, {{sim_vol.chore.reward}}$
+                    </li>
+
+                   {% endif %}
+                {% endfor %}
+
+                 </ul>
 
 
-         {% endfor %}
-</div>
+             {% endfor %}
+    </div>
 <div class="row">
     <ul class="legend">
     <li><span class="pm" style="margin-top:10px; margin-right:10px"></span > personal-mandatory  </li>

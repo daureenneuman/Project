@@ -13,7 +13,7 @@ def populate_chores_table():
             ("Diary time", "diary", True, 7, 'daily', None, True),
             ("Clear the table", "clear-table",True, 3, 'daily', None, False),
             ("Help prepare food", "cook", False, 4, 'daily',2,  False),
-            ("Help carry the groceries", "groceries", False, 7, 'daily', 1, False),
+            ("Help with groceries", "groceries", False, 7, 'daily', 1, False),
             ("Take the dog for a walk", "dog-walk", False, 10, 'daily', 2, False),
             ("Feed the dog", "feed-dog", False, 3, 'daily',  1, False),
             ("Clean your room", "clean-room", True, 3, 'daily', None, True),

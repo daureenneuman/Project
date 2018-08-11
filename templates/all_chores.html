@@ -5,9 +5,9 @@
     <div class="row"> 
 
         <div class="col-12">
-            <div style="text-align:center; color:#f7ff00; font-size:60px; text-align:center; 
+            <div style="text-align:center; color:#ffff99; font-size:60px; text-align:center; 
             font-family:   Helvetica; ">
-            Chores 
+            Chore List 
             </div>
         </div>
     </div>
@@ -18,16 +18,16 @@
         Mandatory Chores
                
             {% for man in mans %}
-          <li style="color:red; font-size:25px; margin-top5px">
+          <li style="color:#ff8566; font-size:25px; margin-top5px">
               {{man.description}}
           </li>
            {% endfor %}
         </ul>
-      <ul class="col-4" style="color:#ececec; list-style-type:none; font-size: 30px; text-align:left">
+      <ul class="col-4" style="color:white; list-style-type:none; font-size: 30px; text-align:left">
            Voluntary Chores
           
             {% for vol in vols %}
-          <li style="color:#32cd32; font-size:25px; margin-top5px">
+          <li style="color:#99ff99; font-size:25px; margin-top5px">
               {{vol.description}}, {{vol.reward}}$
           </li>
            {% endfor %}
@@ -37,7 +37,7 @@
    <h4 id="mes-add" class="title" style="color:white; font-size:30px; font-family:Shadows Into Light"></h4> 
 <button id="add" class="btn btn-outline-secondary btn-md" style="padding: 5px 60px; border-color:#ffd700; color:white" >Add chore</button>
 <form id= "addchore" class="form-horizontal" action='/admin-new-chore' method="POST" 
-style="display:none; font-size:20px; color:#ffd700">
+style="display:none; font-size:20px; color:#ccf5ff">
   
     <label class="control-label col-sm-4" style="color:white" for="desc">Description: </label>
   <div class="col-10" style="width: 400px">
@@ -49,24 +49,23 @@ style="display:none; font-size:20px; color:#ffd700">
     <input type="number" name="age" id="age" required>
     </div>
 
-<div id="must" class="add-radio form-group">
-    <label class="control-label col-sm-4"  style="color:white"for="must">Must? </label>
+<div id="must" class="add-radio form-group" style="margin-top:25px">
+    
     <div class="col-sm-10">
-    <a style="color:red"> Yes <input type="radio" name="must"  value="true" required></input></a>
-    <a style="color:#32cd32"> No <input type="radio" name="must"  value="false" required></input>
+    <a style="color:#ff8566"> Must <input type="radio" name="must"  value="true" required></input></a>
+    <a style="color:#99ff99"> Volunteray <input type="radio" name="must"  value="false" required></input>
     </div>
 </div>
-<div id="sim" class="add-radio form-group">
-    <label class="control-label col-sm-4"  style="color:white" for="sim">Simultaneously? </label>
-    <div class="col-sm-10">
-    <a >Yes <input type="radio" name="sim"  value="true" required></input></a>
-    <a > No <input type="radio" name="sim"  value="false" required></input></a>
+<div id="sim" class="add-radio form-group" style="color:white">
+    <div class="col-sm-10 color:white">
+    <a >personal <input type="radio" name="sim"  value="true" required></input></a>
+    <a >general <input type="radio" name="sim"  value="false" required></input></a>
     </div>
 
 </div>
 <div id="often" class="add-radio form-group">
-    <label class="control-label col-sm-4" style="color:white" for="often">Frequency? </label>
-    <div class="col-sm-10" style="color:#ffd700">
+    
+    <div class="col-sm-10" style="color:white">
     daily <input type="radio" name="often" value="daily" required></input>
     weekly <input type="radio" name="often" value="weekly" required></input>
     biweekly <input type="radio" name="often" value="by_weekly"required></input>

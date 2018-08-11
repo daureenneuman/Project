@@ -39,12 +39,12 @@
         <h2 id="volchores" style="font-family:Shadows Into Light; font-size: 40px; color:#f7ff00; font-weight: bold"> Chores for rewards</h2>
         {% for userchore_vol in userchores_vols %}
         <div id="{{userchore_vol.chore_id}}" class="row">
-            <div class="col-8" >
+            <div class="col-9" >
                 <li style="list-style-type:none; font-size:30px; font-family: 'Indie Flower', cursive; font-weight: bold; color:#ffffff">      
                 {{ userchore_vol.chore.description }} :{{userchore_vol.chore.reward}}$
                 </li>
             </div>    
-            <div class="col-4" >
+            <div class="col-3" >
                 <button class ="vol saverbutton btn btn-outline-light" data-choreid= "{{userchore_vol.chore_id}}" data-reward="{{userchore_vol.chore.reward }}"  value="done" >&#x1f44d</button>
             </div>
         </div>
@@ -63,7 +63,7 @@
             <!-- <div class="col-12"> -->
             <h4 style="font-family:Shadows Into Light; font-size: 40px; color:#f7ff00; font-weight: bold;">Your balnace is: <b id="show_balnace" style="font-family:Shadows Into Light; 
                 font-size: 55px; color:white; font-weight: bold;"> {{ session["balance"] }}</b> dollars!
-            <button id="redeem" type="button" class="btn btn-primary" style="color:white; font-size:25px; border:solid; background-color:#0074D9"> Reedem</button> 
+            <button id="redeem" type="button" class="btn btn-primary" style="color:white; font-size:25px; border:solid; background-color:#0074D9"> Redeem</button> 
             </h4>
             <!-- </div> -->
         </div>

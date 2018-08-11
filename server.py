@@ -270,7 +270,7 @@ def update_chore():
 
 @app.route('/send')
 def send_mail():
-    message_text = "Pay {} {}$".format(session["user.name"], session["balance"])
+    message_text = "pay {} {}$".format(session["user.name"], session["balance"])
     subject = "{} balance".format(session["user.name"])
     message = create_message(sender= 'daureenn@gmail.com', to = 'daureenn@gmail.com', 
     subject=subject,  message_text=message_text)
@@ -327,10 +327,10 @@ def expiriment():
     i=0
     for user in users:
         rec_done = db.session.query(func.count(UserChore.id)).filter(UserChore.date>= from_date, 
-           UserChore.date<= to_date,  UserChore.user == user, UserChore.status == 'done').one()
+           UserChore.date<= to_date,  UserChore.user == user, UserChore.status == 'done', UserChore.chore_id!=2).one()
         count_done= rec_done[0]
         rec_undone = db.session.query(func.count(UserChore.id)).filter(UserChore.date>= from_date, 
-           UserChore.date<= to_date, UserChore.user == user, UserChore.status != 'done').one()
+           UserChore.date<= to_date, UserChore.user == user, UserChore.status != 'done', UserChore.chore_id!=2).one()
         count_undone= rec_undone[0]
         color = colors[i]
         i = +1
